@@ -99,7 +99,7 @@ window.Pauling = (container)->
 
     context.save()
     context.globalCompositeOperation = "destination-out"
-    context.globalAlpha = .95
+    context.globalAlpha = .997
     context.fillStyle = "#000"
     context.fillRect 0, 0, width, height
     context.restore()
@@ -116,7 +116,7 @@ window.Pauling = (container)->
   window.addEventListener "resize", requestResize
   resize()
 
-  lines = (makeL() for i in [0...1])
+  lines = (makeL() for i in [0...50])
 
   return API =
     start: ()->
