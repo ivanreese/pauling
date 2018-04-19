@@ -21,7 +21,7 @@ window.Pauling = (container)->
   container.style.backgroundColor = "hsl(230, 25%, 13%)"
 
 
-  dpr = Math.max 1, Math.round(window.devicePixelRatio)
+  dpr = 1#Math.max 1, Math.round(window.devicePixelRatio)
   width = 0
   height = 0
   running = false
@@ -77,37 +77,22 @@ window.Pauling = (container)->
     requestRender() if running
     return if document.hidden
 
-    # return unless count++ % 2 is 0
+    return unless count++ % 2 is 0
+
+    context.clearRect 0, 0, width, height
 
     for line in lines
 
       moveL line
-
       context.beginPath()
       context.strokeStyle = "hsl(#{Math.random() * 360}, 100%, 50%)"
-      context.lineWidth = 5
+      context.lineWidth = 10
       context.moveTo line.p1.x, line.p1.y
       context.lineTo line.p2.x, line.p2.y
       context.stroke()
 
-    # d = context.getImageData 0, 0, width, height
-    # byte = 3
-    # while byte < d.data.length
-    #   d.data[byte] = d.data[byte] * .95 |0
-    #   byte += 4
-    # context.putImageData d, 0, 0
-
-    context.save()
-    context.globalCompositeOperation = "destination-out"
-    context.globalAlpha = .997
-    context.fillStyle = "#000"
-    context.fillRect 0, 0, width, height
-    context.restore()
 
     blurContext.drawImage canvas, 0, 0, width, height
-
-
-    null
 
 
   # INIT ##########################################################################################
@@ -116,7 +101,7 @@ window.Pauling = (container)->
   window.addEventListener "resize", requestResize
   resize()
 
-  lines = (makeL() for i in [0...50])
+  lines = [makeL()]
 
   return API =
     start: ()->
