@@ -1,6 +1,5 @@
 window.Pauling = (container)->
-  TAU = Math.PI * 2
-  surfaceNames = ["noise", "main", "blur"]
+  surfaceNames = ["main", "blur"]
 
   dpr = 1#Math.max 1, Math.round(window.devicePixelRatio)
   surfaces = {}
@@ -10,10 +9,6 @@ window.Pauling = (container)->
   renderRequested = false
   count = 0
   phase = 0
-  noiseRendered = false
-
-
-  lerp = (a,b,t)-> (1-t)*a + t*b
 
 
   absolutePos = (elm)->
@@ -32,8 +27,6 @@ window.Pauling = (container)->
 
 
   resize = ()->
-    noiseRendered = false
-
     width = container.offsetWidth * dpr
     height = container.offsetHeight * dpr
     for name, surface of surfaces
@@ -66,65 +59,78 @@ window.Pauling = (container)->
     return if document.hidden
     # return unless count++ % 2 is 0
 
+    # t /= 100
+
     renderMain t
-    # renderNoise t
 
 
-  step = 2
-  scale = 100
+  noiseRadius = 0.5
+
+  x1 = (t)->
+    seed = 317
+    0.25 * width + 150 * memoizedNoise seed + noiseRadius * Math.cos(TAU * t * .3), noiseRadius * Math.sin(TAU * t * .3)
+  y1 = (t)->
+    seed = 1697
+    0.5 * height + 150 * memoizedNoise seed + noiseRadius * Math.cos(TAU * t * .3), noiseRadius * Math.sin(TAU * t * .3)
+
+  x2 = (t)->
+    seed = 1317
+    0.75 * width + 100 * memoizedNoise seed + noiseRadius * Math.cos(TAU * t * .2), noiseRadius * Math.sin(TAU * t * .2)
+  y2 = (t)->
+    seed = 697
+    0.5 * height + 100 * memoizedNoise seed + noiseRadius * Math.cos(TAU * t * .2), noiseRadius * Math.sin(TAU * t * .2)
 
 
-  renderMain = (t)->
+  blurTime = 1
+  blurSamples = 1
+
+
+  noiseMemory = []
+  granularity = 0.1
+  memoizedNoise = (x, y)->
+    t = Math.round(x / granularity)
+    s = Math.round(y / granularity)
+    tmem = noiseMemory[t] ?= []
+    smem = tmem[s] ?= simplex2 x, y
+
+
+  renderMain = (time, blur)->
     ctx = surfaces.main.context
     ctx.clearRect 0, 0, width, height
 
-    nCircles = 3000
-    for i in [0..nCircles]
+    for i in [0...blurSamples]
+
+      tFrac = i / blurSamples
+      t = time - tFrac * blurTime
+
+      # alphaCurve = Math.cos scale i, 0, blurSamples, -PI, PI
+      # ctx.globalAlpha = scale alphaCurve, -1, 1, 0.1, 1
+      # ctx.globalAlpha = 1 - tFrac
+
+      ctx.fillStyle = "white"
       ctx.beginPath()
-      frac = i/nCircles
-      x = width/2 + i/4 * Math.cos(89 * frac + .01 * t * TAU)
-      y = height/2 + i/4 * Math.sin(89 * frac + .01 * t * TAU)
-      v = simplex2 x/scale, y/scale
-      l = Math.round lerp 128, 255, v
-      ctx.fillStyle = "rgb(#{l},#{l},#{l})"
-      ctx.arc x, y, Math.sqrt(800 * frac), 0, TAU
+      ctx.arc x1(t), y1(t), 10, 0, TAU
+      ctx.fill()
+      ctx.beginPath()
+      ctx.arc x2(t), y2(t), 10, 0, TAU
       ctx.fill()
 
+      ctx.beginPath()
+      ctx.strokeWidth = 2
+      ctx.strokeStyle = "white"
 
-  renderNoise = (t)->
-    return if noiseRendered
-    noiseRendered = true
-    ctx = surfaces.noise.context
-    ctx.clearRect 0, 0, width, height
+      ctx.moveTo x1(t), y1(t)
 
-    for x in [0..width/step]
-      for y in [0..height/step]
-        v = simplex2 x*step/scale, y*step/scale
-        l = Math.round lerp 128, 255, v
-        ctx.fillStyle = "rgb(#{l},#{l},#{l})"
-        ctx.fillRect x*step, y*step, step, step
+      steps = 100
+      delay = 3
 
+      for i in [1...steps]
+        frac = i / steps
+        x = lerp x1(t - delay*frac), x2(t - delay*(1-frac)), frac
+        y = lerp y1(t - delay*frac), y2(t - delay*(1-frac)), frac
+        ctx.lineTo x, y
 
-    # context.arc x1(t), y1(t), 10, 0, TAU
-    # context.arc x2(t), y2(t), 10, 0, TAU
-    # context.fill()
-    #
-    # context.beginPath()
-    # context.strokeWidth = 2
-    # context.strokeStyle = "white"
-    #
-    # context.moveTo x1(t), y1(t)
-    #
-    # steps = 100
-    # delay = 3
-    #
-    # for i in [1...steps]
-    #   frac = i / steps
-    #   x = lerp x1(t - delay*frac), x2(t - delay*(1-frac)), frac
-    #   y = lerp y1(t - delay*frac), y2(t - delay*(1-frac)), frac
-    #   context.lineTo x, y
-    #
-    # context.stroke()
+      ctx.stroke()
 
     # blurContext.drawImage canvas, 0, 0, width, height
 
@@ -132,7 +138,7 @@ window.Pauling = (container)->
   # INIT ##########################################################################################
 
   absolutePos container
-  container.style.backgroundColor = "#BBB"#"hsl(230, 25%, 13%)"
+  container.style.backgroundColor = "hsl(230, 25%, 13%)"
 
   makeSurface name for name in surfaceNames
   surfaces.blur?.canvas.style["-webkit-filter"] = "blur(20px)"
