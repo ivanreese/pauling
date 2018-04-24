@@ -9,11 +9,7 @@ gulp_uglify = require "gulp-uglify"
 
 
 paths =
-  coffee: [
-    "source/script/top.coffee"
-    "source/script/noise.coffee"
-    "source/script/main.coffee"
-  ]
+  coffee: "source/script/**/*.coffee"
   html: "source/index.html"
   scss: [
     "source/**/vars.scss"
