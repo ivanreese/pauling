@@ -6,7 +6,9 @@ window.Pauling = (c)->
   absolutePos container
   container.style.backgroundColor = "hsl(#{hue}, #{sat}%, 13%)"
 
-  setupSurface surface for name, surface of surfaces
+  setupSurface surface for name, surface of surfaces when surface.active
+
+  setupInput()
 
   window.addEventListener "resize", requestResize
   resize()

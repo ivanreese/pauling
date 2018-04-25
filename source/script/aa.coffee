@@ -4,11 +4,12 @@ API = null
 
 surfaces =
   phasors:
-    active: true
-  particles:
     active: false
-  main:
+  particles:
     active: true
+    clear: true
+  main:
+    active: false
     blurCurve: .5 # 0 to 1 or higher
     blurOpacity: .7
     blurSamples: 10

@@ -4,7 +4,7 @@ update = (e)->
   null
 
 setupInput = ()->
-  container.addEventListener "mousemove", update
-  container.addEventListener "touchmove", (e)->
+  window.addEventListener "mousemove", update
+  window.addEventListener "touchmove", (e)->
     update touch for touch in e.touches
     null

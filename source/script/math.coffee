@@ -51,3 +51,7 @@ sampleNoisePhasor = (name, time)->
   x: x = Math.cos p
   y: y = Math.sin p
   v: simplex2 phasor.xOffset + phasor.radius * x, phasor.yOffset + phasor.radius * y
+
+
+deletePhasor = (name)->
+  delete phasors[name]

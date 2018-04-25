@@ -4,6 +4,7 @@ surfaces.main.setup = ()->
   makeNoisePhasor "bX", 10, 20, 0, -30,  30
   makeNoisePhasor "bY", 10, 20, 0,  30,  30
 
+
 surfaces.main.render = (ctx, t)->
   renderCircle ctx, "a", t, 0.00001, 0
   renderCircle ctx, "b", t, 0.00001, 360
@@ -12,6 +13,7 @@ surfaces.main.render = (ctx, t)->
   renderLine ctx, t, 20, 0.03
   renderLine ctx, t, 15, 0.06
   null
+
 
 renderCircle = (ctx, name, t, grainSize, hue)->
   ctx.beginPath()
