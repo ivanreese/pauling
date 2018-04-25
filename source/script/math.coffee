@@ -31,6 +31,15 @@ granularlize = (grainSize, i)->
   grainSize * Math.round i / grainSize
 
 
+noiseMemory = []
+memoizedNoise = (granularity, x, y)->
+  t = Math.round(x / granularity)
+  s = Math.round(y / granularity)
+  gmem = noiseMemory[granularity] ?= []
+  tmem = gmem[t] ?= []
+  smem = tmem[s] ?= simplex2 x, y
+
+
 makeNoisePhasor = (name, cycleTime, radius = 1, phase = 0, xOffset = 0, yOffset = 0)->
   # radius is a measure of complexity, with intuitive values in the range 1 to 100
   # phase is measured in TAU-radians and thus should be between 0 and 1
@@ -45,12 +54,12 @@ makeNoisePhasor = (name, cycleTime, radius = 1, phase = 0, xOffset = 0, yOffset 
     yOffset: yOffset * phasorComplexityTuning
 
 
-sampleNoisePhasor = (name, time)->
+sampleNoisePhasor = (name, time, fn = simplex2)->
   phasor = phasors[name]
   p = phasor.phase + TAU * time / phasor.cycleTime
   x: x = Math.cos p
   y: y = Math.sin p
-  v: simplex2 phasor.xOffset + phasor.radius * x, phasor.yOffset + phasor.radius * y
+  v: fn phasor.xOffset + phasor.radius * x, phasor.yOffset + phasor.radius * y
 
 
 deletePhasor = (name)->

@@ -3,6 +3,11 @@
 API = null
 
 surfaces =
+  vectors:
+    active: true
+    clear: true
+  snow:
+    active: true
   phasors:
     active: false
   particles:
@@ -10,10 +15,10 @@ surfaces =
     clear: true
   main:
     active: false
-    blurCurve: .5 # 0 to 1 or higher
+    blurCurve: 0 # 0 to 1 or higher
     blurOpacity: .7
     blurSamples: 10
-    blurTime: .05
+    blurTime: 3
     clear: true
   glow:
     active: false
@@ -37,11 +42,25 @@ circleSpeed = .1
 noiseMemory = []
 
 particles = []
+maxParticles = 300
+minParticleArcDist = 5
+maxParticleArcDist = 50
+particleID = 0
+lastParticleX = null
+lastParticleY = null
 
 phasors = {}
 
 hue = 227
-sat = 20
+sat = 15
+bgLightness = 15
 
 # This tweaks phasor radius/shift values to be more intuitive
 phasorComplexityTuning = 1/50
+
+vectorSpacing = 100
+vectors = []
+
+lastTime = null
+
+snow = []

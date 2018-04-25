@@ -19,6 +19,7 @@ resize = ()->
     scale = surface.scale or 1
     surface.canvas.width = width * scale
     surface.canvas.height = height * scale
+    surface.resize?(surface)
   null
 
 
