@@ -6,7 +6,7 @@ surfaces.vectors.simulate = (t, dt)->
   for vecList in vectors
     for vec in vecList
       vec.angle = vec.initAngle + sampleNoisePhasor(vec.aName, t).v
-      vec.strength = scale sampleNoisePhasor(vec.sName, t).v, 0, 1, .5, 2
+      vec.strength = scale sampleNoisePhasor(vec.sName, t).v, 0, 1, .3, 4
   null
 
 

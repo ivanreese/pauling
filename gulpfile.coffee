@@ -58,7 +58,7 @@ gulp.task "html", ()->
 gulp.task "serve", ()->
   browser_sync.init
     ghostMode: false
-    online: true
+    online: false
     server:
       baseDir: "public"
     ui: false

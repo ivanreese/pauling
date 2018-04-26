@@ -1,13 +1,18 @@
+surfaces.arcs.setup = (surface)->
+  surface.context.lineCap = "round"
+  surface.context.lineJoin = "round"
+
+
 surfaces.arcs.render = (ctx, t, dt)->
   for a, ai in particles
-    for bi in [ai-1, ai-3] when bi > 0
+    for bi in [ai-1..ai-1] when bi > 0
       b = particles[bi]
       dx = a.x-b.x
       dy = a.y-b.y
       dist = Math.sqrt dx*dx + dy*dy
       avgEnergy = (a.energy + b.energy)/10
-      if minParticleArcDist*avgEnergy < dist and dist < maxParticleArcDist*avgEnergy
-        renderArc ctx, t, a, b, dist, avgEnergy
+      # if minParticleArcDist*avgEnergy < dist and dist < maxParticleArcDist*avgEnergy
+      renderArc ctx, t, a, b, dist, avgEnergy
   null
 
 
@@ -23,7 +28,14 @@ renderArc = (ctx, t, a, b, dist, avgEnergy)->
 
   alpha = Math.min a.alpha, b.alpha, scale dist, minParticleArcDist*avgEnergy, maxParticleArcDist*avgEnergy, 1, 0, true
   # alpha = 1
-  ctx.lineWidth = alpha * 5 |0
+  ctx.lineWidth = 2#avgEnergy * 3 |0
+
+  # h = scale frac, 0, 1, 198, 284
+  # s = scale frac, 0, 1, 100, 44
+  # l = scale frac, 0, 1, 44, 55
+  # ctx.strokeStyle = "hsla(#{h}, #{s}%, #{l}%, #{alpha})"
+  ctx.strokeStyle = "rgba(255,255,255,#{alpha})"
+
 
   for i in [1..steps]
     frac = i / steps
@@ -40,12 +52,7 @@ renderArc = (ctx, t, a, b, dist, avgEnergy)->
     x = lerp x1, x2, frac
     y = lerp y1, y2, frac
 
-    h = scale frac, 0, 1, 198, 284
-    s = scale frac, 0, 1, 100, 44
-    l = scale frac, 0, 1, 44, 55
-    ctx.strokeStyle = "hsla(#{h}, #{s}%, #{l}%, #{alpha})"
     ctx.lineTo x, y
-    ctx.stroke()
-    ctx.beginPath()
-    ctx.moveTo x, y
+
+  ctx.stroke()
   null

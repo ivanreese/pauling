@@ -10,15 +10,24 @@ surfaces =
   snow:
     doSimulate: true
     doRender: true
+    scale: 2
+  particles:
+    doSimulate: true
+    doRender: true
+    blurCurve: 0 # 0 to 1 or higher
+    blurOpacity: .7
+    blurSamples: 10
+    blurTime: .2
+    clear: true
   snowbuffer:
     doRender: true
   arcs:
-    doSimulate: false
-    doRender: false
-    clear: true
-  particles:
-    doSimulate: false
-    doRender: false
+    doSimulate: true
+    doRender: true
+    blurCurve: 1 # 0 to 1 or higher
+    blurOpacity: .4
+    blurSamples: 4
+    blurTime: 1
     clear: true
   phasors:
     doSimulate: false
@@ -58,10 +67,12 @@ noiseMemory = []
 particles = []
 maxParticles = 300
 minParticleArcDist = 5
-maxParticleArcDist = 50
+maxParticleArcDist = 100
 particleID = 0
 lastParticleX = null
 lastParticleY = null
+particleMinEnergy = 1
+particleMaxEnergy = 30
 
 phasors = {}
 

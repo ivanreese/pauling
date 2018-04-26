@@ -1,7 +1,37 @@
+surfaces.particles.move = (x, y)->
+  lastParticleX ?= x
+  lastParticleY ?= y
+  return if Math.abs(lastParticleX - x) < 12 and Math.abs(lastParticleY - y) < 12
+
+  dx = lastParticleX - x
+  dy = lastParticleY - y
+  dist = Math.sqrt dx*dx + dy*dy
+  energy = 0.1 * Math.pow dist, 1.5
+  energy = clip energy, particleMinEnergy, particleMaxEnergy
+
+  lastParticleX = x
+  lastParticleY = y
+
+  index = particleID++
+  xName = "particle#{index}x"
+  yName = "particle#{index}y"
+  makeNoisePhasor xName, 30, 30, 0, Math.random()*100, 0
+  makeNoisePhasor yName, 30, 30, 0, Math.random()*100, 0
+  particles.push
+    sx: x
+    sy: y
+    r: 1
+    maxAge: 2 + particles.length/100#Math.pow rand(.5, 2), 3
+    energy: energy
+    xName: xName
+    yName: yName
+
+
 surfaces.particles.simulate = (t, dt)->
   i = particles.length
   while i > 0
     i--
+    frac = i/particles.length
     particle = particles[i]
 
     particle.birth ?= t
@@ -10,34 +40,45 @@ surfaces.particles.simulate = (t, dt)->
     if particles.length > maxParticles
       particle.maxAge -= (particles.length-maxParticles)/maxParticles
 
-    particle.r = Math.sqrt(particle.age) * 100
+    energyFrac = scale particle.energy, particleMinEnergy, particleMaxEnergy, 0, 1, true
+    ageFrac = scale particle.age, 0, particle.maxAge, 1, 0, true
+    particle.radius = scale energyFrac * ageFrac, 0, 1, 3, 100
 
-    particle.x = particle.sx + particle.r * sampleNoisePhasor(particle.xName, t).v
-    particle.y = particle.sy + particle.r * sampleNoisePhasor(particle.yName, t).v
+    particle.r = Math.pow((particle.age/particle.maxAge)*6, 3)#Math.sqrt(particle.age) * 100
 
     particle.birthAlpha = scale particle.age, 0, particle.maxAge*.1, 0, 1, true
-    particle.deathAlpha = scale particle.age, particle.maxAge*.9, particle.maxAge, 1, 0, true
-    particle.alpha = Math.min particle.birthAlpha, particle.deathAlpha
+    particle.deathAlpha = scale particle.age, particle.maxAge*.5, particle.maxAge, 1, 0, true
+    particle.alpha = Math.min 1, particle.birthAlpha, particle.deathAlpha+.1
+
+    if particle.deathAlpha < 1
+      spawnSnow particle.x, particle.y, particle.radius
+
 
     deceased = particle.age > particle.maxAge
     offScreen = particle.x < -10 or particle.y < -10 or particle.x > width + 10 or particle.y > height + 10
 
     if deceased or offScreen
-      deleteParticle particle
+      deleteParticle particle, frac
       particles.splice i, 1
 
   null
 
 
 surfaces.particles.render = (ctx, t)->
-  for particle, i in particles
+  for particle, i in particles by -1
     frac = i/particles.length
 
+    particle.x = particle.sx + particle.r * sampleNoisePhasor(particle.xName, t).v
+    particle.y = particle.sy + particle.r * sampleNoisePhasor(particle.yName, t).v
+
     ctx.beginPath()
-    ctx.arc particle.x, particle.y, particle.energy, 0, TAU
+    # ctx.globalAlpha = .7
+
+    ctx.arc particle.x, particle.y, particle.radius, 0, TAU
 
     if particle.birthAlpha < 1
-      ctx.fillStyle = "hsla(19,100%,#{particle.alpha*50+50}%,#{particle.alpha})"
+      h = scale particle.birthAlpha, 0, 1, 42, 20
+      ctx.fillStyle = "hsla(#{h},100%,50%,.7)"
     else
       h = scale frac, 0, 1, 198, 284
       s = scale frac, 0, 1, 100, 44
@@ -48,39 +89,6 @@ surfaces.particles.render = (ctx, t)->
   null
 
 
-surfaces.particles.move = (x, y)->
-  makeParticle x, y
-
-
-makeParticle = (x, y)->
-  lastParticleX ?= x
-  lastParticleY ?= y
-  return if Math.abs(lastParticleX - x) < 12 and Math.abs(lastParticleY - y) < 12
-
-  dx = lastParticleX - x
-  dy = lastParticleY - y
-  dist = Math.sqrt dx*dx + dy*dy
-  energy = 0.1 * Math.pow dist, 1.5
-  energy = clip energy, 1, 20
-
-  lastParticleX = x
-  lastParticleY = y
-
-  index = particleID++
-  xName = "particle#{index}x"
-  yName = "particle#{index}y"
-  makeNoisePhasor xName, 10, 10, Math.random(), 0, 0
-  makeNoisePhasor yName, 10, 10, Math.random(), 0, 0
-  particles.push
-    sx: x
-    sy: y
-    r: 1
-    maxAge: Math.pow rand(.5, 2), 3
-    energy: energy
-    xName: xName
-    yName: yName
-
-
-deleteParticle = (particle)->
+deleteParticle = (particle, frac)->
   deletePhasor particle.xName
   deletePhasor particle.yName
