@@ -15,7 +15,7 @@ setupSurface = (surface)->
 resize = ()->
   width = container.offsetWidth * dpr
   height = container.offsetHeight * dpr
-  for name, surface of surfaces when surface.active
+  for name, surface of surfaces
     scale = surface.scale or 1
     surface.canvas.width = width * scale
     surface.canvas.height = height * scale

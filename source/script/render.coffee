@@ -4,23 +4,27 @@ requestRender = ()->
     requestAnimationFrame render
 
 
-render = (ms)->
+render = (currentTime)->
   renderRequested = false
   requestRender() if running
   return if document.hidden
-  return requestRender() if isNaN ms
+  return requestRender() if isNaN currentTime
 
-  lastTime ?= (ms - 16)/1000 * timeScale
-  t = ms/1000 * timeScale
-  dt = t - lastTime
-  lastTime = t
+  lastTime ?= currentTime - 16
+  deltaMs = Math.min 32, currentTime - lastTime
+  dt = timeScale/1000 * deltaMs
+  lastTime = currentTime
+  worldTime += dt
 
-  for name, surface of surfaces when surface.active
+  for name, surface of surfaces when surface.doSimulate
+    surface.simulate? worldTime, dt
+
+  for name, surface of surfaces when surface.doSimulate and surface.doRender
     surface.context.clearRect 0, 0, width, height if surface.clear
     if surface.blurTime?
-      renderWithMotionBlur surface, t, dt
+      renderWithMotionBlur surface, worldTime, dt
     else
-      surface.render surface.context, t, dt
+      surface.render? surface.context, worldTime, dt
 
   null
 

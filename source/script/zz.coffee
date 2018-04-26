@@ -4,9 +4,9 @@ window.Pauling = (c)->
   container = c
 
   absolutePos container
-  container.style.backgroundColor = "hsl(#{hue}, #{sat}%, 15%)"
+  container.style.backgroundColor = "#222"
 
-  setupSurface surface for name, surface of surfaces when surface.active
+  setupSurface surface for name, surface of surfaces
 
   setupInput()
 

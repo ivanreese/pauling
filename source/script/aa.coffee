@@ -4,24 +4,36 @@ API = null
 
 surfaces =
   vectors:
-    active: true
+    doSimulate: true
+    doRender: false
     clear: true
   snow:
-    active: true
-  phasors:
-    active: false
-  particles:
-    active: true
+    doSimulate: true
+    doRender: true
+  snowbuffer:
+    doRender: true
+  arcs:
+    doSimulate: false
+    doRender: false
     clear: true
+  particles:
+    doSimulate: false
+    doRender: false
+    clear: true
+  phasors:
+    doSimulate: false
+    doRender: false
   main:
-    active: false
+    doSimulate: false
+    doRender: false
     blurCurve: 0 # 0 to 1 or higher
     blurOpacity: .7
     blurSamples: 10
     blurTime: 3
     clear: true
   glow:
-    active: false
+    doSimulate: false
+    doRender: false
     clear: true
     scale: .5
 
@@ -33,6 +45,8 @@ height = 0
 
 running = false
 renderRequested = false
+
+worldTime = 0
 
 timeScale = 1
 
@@ -60,6 +74,7 @@ phasorComplexityTuning = 1/50
 
 vectorSpacing = 100
 vectors = []
+vectorFading = 0
 
 lastTime = null
 
