@@ -1,23 +1,19 @@
-surfaces.arcs.setup = (surface)->
-  surface.context.lineCap = "round"
-  surface.context.lineJoin = "round"
-
-
 surfaces.arcs.render = (ctx, t, dt)->
-  for a, ai in particles
-    for bi in [ai-1..ai-1] when bi > 0
-      b = particles[bi]
-      dx = a.x-b.x
-      dy = a.y-b.y
-      dist = Math.sqrt dx*dx + dy*dy
-      avgEnergy = (a.energy + b.energy)/10
-      # if minParticleArcDist*avgEnergy < dist and dist < maxParticleArcDist*avgEnergy
-      renderArc ctx, t, a, b, dist, avgEnergy
+  ctx.lineJoin = "round"
+
+  for a, ai in particles when ai > 0
+    b = particles[ai-1]
+    dx = a.x-b.x
+    dy = a.y-b.y
+    dist = Math.sqrt dx*dx + dy*dy
+    if dist < 100
+      arcEnergy = (a.energy + b.energy)/10
+      renderArc ctx, t, a, b, dist, arcEnergy
   null
 
 
-renderArc = (ctx, t, a, b, dist, avgEnergy)->
-  delay = Math.sqrt dist/50
+renderArc = (ctx, t, a, b, dist, arcEnergy)->
+  delay = Math.pow dist/20, .5
   steps = Math.ceil dist/10
 
   x = a.sx + a.r * sampleNoisePhasor(a.xName, t).v
@@ -26,20 +22,12 @@ renderArc = (ctx, t, a, b, dist, avgEnergy)->
   ctx.beginPath()
   ctx.moveTo x, y
 
-  alpha = Math.min a.alpha, b.alpha, scale dist, minParticleArcDist*avgEnergy, maxParticleArcDist*avgEnergy, 1, 0, true
-  # alpha = 1
-  ctx.lineWidth = 2#avgEnergy * 3 |0
-
-  # h = scale frac, 0, 1, 198, 284
-  # s = scale frac, 0, 1, 100, 44
-  # l = scale frac, 0, 1, 44, 55
-  # ctx.strokeStyle = "hsla(#{h}, #{s}%, #{l}%, #{alpha})"
+  alpha = Math.min(a.alpha, b.alpha)/2
   ctx.strokeStyle = "rgba(255,255,255,#{alpha})"
-
+  ctx.lineWidth = scale a.radius + b.radius, 2, maxParticleRadius*2, 1, 8, true
 
   for i in [1..steps]
     frac = i / steps
-    # frac2 = scale Math.cos(TAU * frac), -1, 1, 0, 1
 
     d1 = t-delay*frac
     d2 = t-delay*(1-frac)
