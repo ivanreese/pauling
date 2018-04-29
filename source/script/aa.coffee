@@ -6,8 +6,8 @@ surfaces =
   vectors:
     doSimulate: true
   snow:
-    doSimulate: true
-    doRender: true
+    doSimulate: false
+    doRender: false
     scale: 1
   snowbuffer:
     doRender: true
@@ -16,9 +16,9 @@ surfaces =
     doSimulate: true
     doRender: true
     # blurCurve: .2 # 0 to 1 or higher
-    # blurOpacity: .7
-    # blurSamples: 6
-    # blurTime: .3
+    # blurOpacity: .9
+    # blurSamples: 3
+    # blurTime: .5
     clear: true
   arcs:
     doSimulate: true
@@ -59,6 +59,10 @@ lastTime = null
 
 timeScale = 1
 
+hasMoved = false
+clientX = 0
+clientY = 0
+
 # This tweaks phasor radius/shift values to be more intuitive
 phasorComplexityTuning = 1/50
 
@@ -85,6 +89,10 @@ particleMaxEnergy = 35
 maxParticleRadius = 90
 lastParticleSpawnTime = -10000
 currentParticleEnergy = 0
+maxArcsPerParticle = 5
+particleMoveCount = 0
+
+arcs = []
 
 vectorSpacing = 100
 vectors = []

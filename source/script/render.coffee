@@ -17,6 +17,7 @@ render = (currentTime)->
   worldTime += dt
 
   for name, surface of surfaces when surface.doSimulate
+    surface.move? clientX, clientY, worldTime, dt if hasMoved
     surface.simulate? worldTime, dt
 
   for name, surface of surfaces when surface.doSimulate and surface.doRender
@@ -26,7 +27,7 @@ render = (currentTime)->
     else
       surface.render? surface.context, worldTime, dt
 
-  null
+  hasMoved = false
 
 
 renderWithMotionBlur = (surface, t, dt)->

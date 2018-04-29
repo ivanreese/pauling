@@ -1,10 +1,10 @@
-update = (e)->
-  for name, surface of surfaces when surface.move?
-    surface.move e.clientX, e.clientY
-  null
-
 setupInput = ()->
-  window.addEventListener "mousemove", update
+  window.addEventListener "mousemove", (e)->
+    hasMoved = true
+    clientX = e.clientX
+    clientY = e.clientY
+
   window.addEventListener "touchmove", (e)->
-    update touch for touch in e.touches
-    null
+    hasMoved = true
+    clientX = e.touches[0].clientX
+    clientY = e.touches[0].clientY
