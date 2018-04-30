@@ -1,32 +1,27 @@
 surfaces.particles.move = (x, y, t, dt)->
-  return unless particleMoveCount++ % 2 is 0
-  lastParticleX ?= x
-  lastParticleY ?= y
-  dx = lastParticleX - x
-  dy = lastParticleY - y
-  dist = Math.sqrt dx*dx + dy*dy
-  currentParticleEnergy += .01 * Math.pow dist, 1.7
+  return if Math.random() < 0.1
+  currentParticleEnergy += .01 * Math.pow mouseDist, 1.7
   currentParticleEnergy = clip currentParticleEnergy, particleMinEnergy, particleMaxEnergy
   energy = Math.random() * currentParticleEnergy
   index = particleID++
   xName = "particle#{index}x"
   yName = "particle#{index}y"
-  makeNoisePhasor xName, 20, 40, 0, Math.random()*100, 0
-  makeNoisePhasor yName, 20, 40, 0, Math.random()*100, 0
+  makeNoisePhasor xName, 10, 20, 0, Math.random()*1000, 0
+  makeNoisePhasor yName, 10, 20, 0, Math.random()*1000, 0
   particles.push particle =
-    sx: x + 30 * (Math.random() - .5) * Math.sqrt energy
-    sy: y + 30 * (Math.random() - .5) * Math.sqrt energy
-    r: 0
+    sx: x + (Math.random() - .5) * 30 * Math.sqrt energy
+    sy: y + (Math.random() - .5) * 30 * Math.sqrt energy
     birth: t
-    maxAge: 1#scale particles.length, 0, maxParticles, 5, 5
+    maxAge: 1
     dead: false
     energy: energy
+    energyFrac: scale energy, particleMinEnergy, particleMaxEnergy, 0.01, 1, true
     xName: xName
     yName: yName
     shape: Math.floor(Math.pow(Math.random(), 3) * 10)
     angle: Math.random()
-    skew: 1#1 + .5 * Math.pow(Math.random()*2-1, 3)
     arcs: 0
+    id: index
   for i in [particles.length-4...particles.length-1] when i > 0
     pair = particles[i]
     dx = particle.sx - pair.sx
@@ -50,22 +45,24 @@ surfaces.particles.simulate = (t, dt)->
     frac = i/particles.length
 
     particle.age = t - particle.birth
+    ageFrac = particle.age/particle.maxAge
+    particle.ageFrac = ageFrac
+    ageFracInv = 1-ageFrac
 
     if particles.length > maxParticles
       particle.maxAge -= .1*(particles.length-maxParticles)/maxParticles
 
-    particle.r = Math.pow((particle.age/particle.maxAge)*20, 1.2)#Math.sqrt(particle.age) * 100
+    particle.r = scale Math.pow(ageFrac, 4), 0, 1, 30, 100
 
     particle.x = particle.sx + particle.r * sampleNoisePhasor(particle.xName, t).v
     particle.y = particle.sy + particle.r * sampleNoisePhasor(particle.yName, t).v
 
-    particle.birthFrac = scale particle.age, 0, particle.maxAge*.2, 0, 1, true
-    particle.deathFrac = scale particle.age, particle.maxAge*.6, particle.maxAge, 1, 0, true
+    particle.birthFrac = Math.min 1, ageFrac * 5
+    particle.deathFrac = Math.min 1, ageFracInv / .6
 
-    energyFrac = scale particle.energy, particleMinEnergy, particleMaxEnergy, 0.01, 1, true
-    ageFrac = scale particle.age, 0, particle.maxAge, 1, 0, true
-    ageFactor = Math.min ageFrac, Math.sqrt particle.birthFrac
-    particle.radius = scale Math.pow(energyFrac * ageFactor, .5), 0, 1, 0, maxParticleRadius
+    ageFactor = Math.min ageFracInv, Math.sqrt particle.birthFrac
+    radiusFrac = Math.pow particle.energyFrac * ageFactor, .5
+    particle.radius = radiusFrac * maxParticleRadius
 
     if particle.birthFrac < 1
       h = scale particle.birthFrac, 0, 1, 42, 20
@@ -76,8 +73,8 @@ surfaces.particles.simulate = (t, dt)->
       l = Math.min 100, scale frac, 0, 1, 44, 55/particle.deathFrac
       particle.style = "hsl(#{h},#{s}%,#{l}%)"
 
-    if particle.deathFrac < 1 and Math.random() < .3
-      spawnSnow particle.x, particle.y, particle.radius
+    if particle.deathFrac < 1 and Math.random() < particle.deathFrac
+      spawnSnow particle.id, particle.x, particle.y, particle.radius/10
 
     if particle.age > particle.maxAge
       deadIndex = i
@@ -105,10 +102,10 @@ surfaces.particles.render = (ctx, t)->
     if particle.shape < 3
       ctx.arc particle.x, particle.y, particle.radius, 0, TAU
     else
-      ctx.moveTo particle.x + particle.skew * particle.radius * Math.cos(TAU * particle.angle), particle.y + particle.radius * Math.sin(TAU * particle.angle)
+      ctx.moveTo particle.x + particle.radius * Math.cos(TAU * particle.angle), particle.y + particle.radius * Math.sin(TAU * particle.angle)
       for p in [1..particle.shape]
         ang = TAU * (particle.angle+p/particle.shape)
-        ctx.lineTo particle.x + particle.skew * particle.radius * Math.cos(ang), particle.y + particle.radius * Math.sin(ang)
+        ctx.lineTo particle.x + particle.radius * Math.cos(ang), particle.y + particle.radius * Math.sin(ang)
     ctx.fill()
 
   null

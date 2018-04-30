@@ -6,8 +6,8 @@ surfaces =
   vectors:
     doSimulate: true
   snow:
-    doSimulate: false
-    doRender: false
+    doSimulate: true
+    doRender: true
     scale: 1
   snowbuffer:
     doRender: true
@@ -23,10 +23,10 @@ surfaces =
   arcs:
     doSimulate: true
     doRender: true
-    # blurCurve: 0 # 0 to 1 or higher
-    # blurOpacity: .5
-    # blurSamples: 3
-    # blurTime: 1.2
+    blurCurve: 0 # 0 to 1 or higher
+    blurOpacity: 1
+    blurSamples: 3
+    blurTime: .07
     clear: true
   phasors:
     doSimulate: false
@@ -60,8 +60,13 @@ lastTime = null
 timeScale = 1
 
 hasMoved = false
-clientX = 0
-clientY = 0
+mouseX = 0
+mouseY = 0
+lastMouseX = null
+lastMouseY = null
+mouseDx = null
+mouseDy = null
+mouseDist = null
 
 # This tweaks phasor radius/shift values to be more intuitive
 phasorComplexityTuning = 1/50
@@ -85,8 +90,8 @@ particleID = 0
 lastParticleX = null
 lastParticleY = null
 particleMinEnergy = 1
-particleMaxEnergy = 35
-maxParticleRadius = 90
+particleMaxEnergy = 30
+maxParticleRadius = 70
 lastParticleSpawnTime = -10000
 currentParticleEnergy = 0
 maxArcsPerParticle = 5
@@ -94,15 +99,15 @@ particleMoveCount = 0
 
 arcs = []
 
-vectorSpacing = 100
+vectorSpacing = 150
 vectors = []
 vectorFading = 0
 
 snow = []
 maxSnow = 1000
-worstSnow = 0
-bestSnow = 3000
+worstSnow = 500
+bestSnow = 1500
 snowId = 0
 
-fadeTime = 10
+fadeTime = 30
 bufferTime = 0

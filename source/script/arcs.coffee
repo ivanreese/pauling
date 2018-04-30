@@ -19,8 +19,8 @@ surfaces.arcs.render = (ctx, t, dt)->
       delete arcs.splice i, 1
       continue
 
-    delay = Math.pow arc.dist/20, .5
-    steps = Math.ceil arc.dist/10
+    delay = 2 * a.ageFrac
+    steps = Math.ceil delay * arc.dist/15
 
     x = a.sx + a.r * sampleNoisePhasor(a.xName, t).v
     y = a.sy + a.r * sampleNoisePhasor(a.yName, t).v
@@ -28,7 +28,7 @@ surfaces.arcs.render = (ctx, t, dt)->
     ctx.beginPath()
     ctx.moveTo x, y
 
-    alpha = Math.min a.deathFrac, b.deathFrac
+    ctx.globalAlpha = Math.min a.deathFrac, b.deathFrac
     ctx.strokeStyle = a.style
     ctx.lineWidth = scale a.radius + b.radius, 2, maxParticleRadius*2, 1, 5, true
 

@@ -4,11 +4,17 @@ requestRender = ()->
     requestAnimationFrame render
 
 
+bail = (fn)->
+  lastMouseX = null
+  lastMouseY = null
+  fn?()
+
+
 render = (currentTime)->
   renderRequested = false
   requestRender() if running
-  return if document.hidden
-  return requestRender() if isNaN currentTime
+  return bail null if document.hidden
+  return bail requestRender if isNaN currentTime
 
   lastTime ?= currentTime - 16
   deltaMs = Math.min 32, currentTime - lastTime
@@ -16,8 +22,19 @@ render = (currentTime)->
   lastTime = currentTime
   worldTime += dt
 
+  if hasMoved & lastMouseX?
+    mouseDx = lastMouseX - mouseX
+    mouseDy = lastMouseY - mouseY
+    mouseDist = Math.sqrt mouseDx*mouseDx + mouseDy*mouseDy
+  else
+    lastMouseX = mouseX
+    lastMouseY = mouseY
+    mouseDx = 0
+    mouseDy = 0
+    mouseDist = 0
+
   for name, surface of surfaces when surface.doSimulate
-    surface.move? clientX, clientY, worldTime, dt if hasMoved
+    surface.move? mouseX, mouseY, worldTime, dt if hasMoved
     surface.simulate? worldTime, dt
 
   for name, surface of surfaces when surface.doSimulate and surface.doRender
@@ -28,7 +45,8 @@ render = (currentTime)->
       surface.render? surface.context, worldTime, dt
 
   hasMoved = false
-
+  lastMouseX = mouseX
+  lastMouseY = mouseY
 
 renderWithMotionBlur = (surface, t, dt)->
   for i in [0...surface.blurSamples]

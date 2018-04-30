@@ -1,10 +1,10 @@
 setupInput = ()->
   window.addEventListener "mousemove", (e)->
     hasMoved = true
-    clientX = e.clientX
-    clientY = e.clientY
+    mouseX = e.clientX
+    mouseY = e.clientY
 
   window.addEventListener "touchmove", (e)->
     hasMoved = true
-    clientX = e.touches[0].clientX
-    clientY = e.touches[0].clientY
+    mouseX = e.touches[0].clientX
+    mouseY = e.touches[0].clientY
