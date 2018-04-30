@@ -15,35 +15,11 @@ surfaces =
   particles:
     doSimulate: true
     doRender: true
-    # blurCurve: .2 # 0 to 1 or higher
-    # blurOpacity: .9
-    # blurSamples: 3
-    # blurTime: .5
     clear: true
   arcs:
     doSimulate: true
     doRender: true
-    blurCurve: 0 # 0 to 1 or higher
-    blurOpacity: 1
-    blurSamples: 3
-    blurTime: .07
     clear: true
-  phasors:
-    doSimulate: false
-    doRender: false
-  main:
-    doSimulate: false
-    doRender: false
-    blurCurve: 0 # 0 to 1 or higher
-    blurOpacity: .7
-    blurSamples: 10
-    blurTime: 3
-    clear: true
-  glow:
-    doSimulate: false
-    doRender: false
-    clear: true
-    scale: .5
 
 container = null
 
@@ -99,14 +75,14 @@ particleMoveCount = 0
 
 arcs = []
 
-vectorSpacing = 150
+vectorSpacing = 100
 vectors = []
 vectorFading = 0
 
 snow = []
 maxSnow = 1000
 worstSnow = 500
-bestSnow = 1500
+bestSnow = 1000
 snowId = 0
 
 fadeTime = 30

@@ -1,28 +1,29 @@
 surfaces.particles.move = (x, y, t, dt)->
-  return if Math.random() < 0.1
   currentParticleEnergy += .01 * Math.pow mouseDist, 1.7
   currentParticleEnergy = clip currentParticleEnergy, particleMinEnergy, particleMaxEnergy
   energy = Math.random() * currentParticleEnergy
+  energyFrac = scale energy, particleMinEnergy, particleMaxEnergy, 0.01, 1, true
   index = particleID++
   xName = "particle#{index}x"
   yName = "particle#{index}y"
   makeNoisePhasor xName, 10, 20, 0, Math.random()*1000, 0
   makeNoisePhasor yName, 10, 20, 0, Math.random()*1000, 0
   particles.push particle =
-    sx: x + (Math.random() - .5) * 30 * Math.sqrt energy
-    sy: y + (Math.random() - .5) * 30 * Math.sqrt energy
+    sx: x + (Math.random() - .5) * scale energyFrac, 0, 1, 10, 220
+    sy: y + (Math.random() - .5) * scale energyFrac, 0, 1, 10, 220
     birth: t
-    maxAge: 1
+    maxAge: 1.1
     dead: false
     energy: energy
-    energyFrac: scale energy, particleMinEnergy, particleMaxEnergy, 0.01, 1, true
+    energyFrac: energyFrac
     xName: xName
     yName: yName
-    shape: Math.floor(Math.pow(Math.random(), 3) * 10)
+    shape: Math.floor(Math.pow(Math.random(), 2.5) * 9)
     angle: Math.random()
     arcs: 0
     id: index
-  for i in [particles.length-4...particles.length-1] when i > 0
+    spawnCount: 0
+  for i in [particles.length-3...particles.length-1] when i > 0
     pair = particles[i]
     dx = particle.sx - pair.sx
     dy = particle.sy - pair.sy
@@ -52,13 +53,13 @@ surfaces.particles.simulate = (t, dt)->
     if particles.length > maxParticles
       particle.maxAge -= .1*(particles.length-maxParticles)/maxParticles
 
-    particle.r = scale Math.pow(ageFrac, 4), 0, 1, 30, 100
+    particle.r = scale Math.pow(ageFrac, 4), 0, 1, 10, 80 + 40 * particle.energyFrac
 
     particle.x = particle.sx + particle.r * sampleNoisePhasor(particle.xName, t).v
     particle.y = particle.sy + particle.r * sampleNoisePhasor(particle.yName, t).v
 
     particle.birthFrac = Math.min 1, ageFrac * 5
-    particle.deathFrac = Math.min 1, ageFracInv / .6
+    particle.deathFrac = Math.min 1, ageFracInv / .7
 
     ageFactor = Math.min ageFracInv, Math.sqrt particle.birthFrac
     radiusFrac = Math.pow particle.energyFrac * ageFactor, .5
@@ -73,8 +74,8 @@ surfaces.particles.simulate = (t, dt)->
       l = Math.min 100, scale frac, 0, 1, 44, 55/particle.deathFrac
       particle.style = "hsl(#{h},#{s}%,#{l}%)"
 
-    if particle.deathFrac < 1 and Math.random() < particle.deathFrac
-      spawnSnow particle.id, particle.x, particle.y, particle.radius/10
+    if particle.deathFrac < 1 and particle.spawnCount++ % 3 is 0
+      spawnSnow particle.id, particle.x, particle.y, particle.radius/10, particle.deathFrac
 
     if particle.age > particle.maxAge
       deadIndex = i

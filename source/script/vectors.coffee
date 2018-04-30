@@ -16,8 +16,8 @@ surfaces.vectors.resize = (surface)->
       y = j * vectorSpacing
       aName = "vectors-#{x}-#{y}a"
       sName = "vectors-#{x}-#{y}s"
-      makeNoisePhasor aName, 120, 30, 0, i*10, j
-      makeNoisePhasor sName, 70, 30, 0, -i*10, -j
+      makeNoisePhasor aName, 120, 25, 0, i*8, j
+      makeNoisePhasor sName, 70, 30, 0, -i*8, -j
       vectors[i].push
         aName: aName
         sName: sName

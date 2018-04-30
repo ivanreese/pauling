@@ -19,8 +19,8 @@ surfaces.arcs.render = (ctx, t, dt)->
       delete arcs.splice i, 1
       continue
 
-    delay = 2 * a.ageFrac
-    steps = Math.ceil delay * arc.dist/15
+    delay = .5 + 2 * a.ageFrac
+    steps = Math.ceil delay * arc.dist/13
 
     x = a.sx + a.r * sampleNoisePhasor(a.xName, t).v
     y = a.sy + a.r * sampleNoisePhasor(a.yName, t).v

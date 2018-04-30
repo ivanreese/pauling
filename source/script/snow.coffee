@@ -1,9 +1,9 @@
 surfaces.snow.setup = (surface)->
-  makeNoisePhasor "snowLight", 120, 30, 0, 1000 * Math.random()
-  makeNoisePhasor "snowHue", 30, 40, 190, 1000 * Math.random()
+  makeNoisePhasor "snowLight", 100, 40, 1000 * Math.random()
+  makeNoisePhasor "snowHue", 30, 40, 1000 * Math.random()
 
 
-spawnSnow = (particleId, x, y, radius)->
+spawnSnow = (particleId, x, y, radius, particleAgeFrac)->
   if snow.length > maxSnow
     snow.splice 0, snow.length-maxSnow
 
@@ -15,8 +15,9 @@ spawnSnow = (particleId, x, y, radius)->
     age: 0
     id: id
     light: scale Math.random(), 0, 1, 30, 50
-    sat: scale Math.pow(0.5*(Math.pow(2*satFrac - 1, 3)+1), 2), 0, 1, 15, 85
-    maxAge: 2 + Math.pow(Math.random(), 3) * 15
+    sat: scale Math.pow(0.5*(Math.pow(2*satFrac - 1, 3)+1), 2), 0, 1, 0, 90
+    maxAge: 3 + Math.pow(particleAgeFrac, 3) * 20
+    radius: radius/2
 
 
 surfaces.snow.simulate = (t, dt)->
@@ -30,7 +31,7 @@ surfaces.snow.simulate = (t, dt)->
 
     s.alpha = Math.min s.ageFracInv, 1
 
-    if s.age > s.maxAge
+    if s.age > s.maxAge or s.x < 0 or s.y < 0 or s.x > width or s.y > height
       snow.splice i, 1
       continue
 
@@ -62,18 +63,18 @@ vecSnowDist = (i, dt, s, vec)->
   dist = Math.sqrt dx*dx+dy*dy
   strength = vec.strength * (1 - dist/vectorSpacing)
   if strength > 0
-    s.x += strength * 150 * dt * Math.cos vec.angle * TAU
-    s.y += strength * 150 * dt * Math.sin vec.angle * TAU
+    s.x += strength * 300 * dt * Math.cos vec.angle * TAU
+    s.y += strength * 300 * dt * Math.sin vec.angle * TAU
 
 
 surfaces.snow.render = (ctx, t, dt)->
   ctx.globalCompositeOperation = "screen"
-  snowHue = scale sampleNoisePhasor("snowHue", t).v, -1, 1, 280, 200
-  snowLight = scale sampleNoisePhasor("snowLight", t).v, -1, 1, 50, 90
-  ctx.lineWidth = 1
+  snowHue = scale sampleNoisePhasor("snowHue", t).v, -1, 1, 270, 210
+  snowLight = scale sampleNoisePhasor("snowLight", t).v, -1, 1, 50, 70
   ctx.lineCap = "round" # This prevents speckling in Chrome
   for s, i in snow
     ctx.beginPath()
+    ctx.lineWidth = .2 + s.ageFracInv + s.radius
     ctx.strokeStyle = "hsla(#{snowHue},#{s.sat}%,#{snowLight}%,#{s.alpha})"
     ctx.moveTo s.ox, s.oy
     ctx.lineTo s.x, s.y

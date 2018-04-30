@@ -1,5 +1,5 @@
 surfaces.snowbuffer.render = (ctx, t, dt)->
-  bufferTime += mouseDist/100 + dt
+  bufferTime += mouseDist/180 + dt
 
   if bufferTime > fadeTime
     bufferTime = 0
