@@ -7,9 +7,9 @@ makeArc = (a, b, dist, energy)->
 
 
 surfaces.arcs.render = (ctx, t, dt)->
-  ctx.lineCap = "round"
-  ctx.lineJoin = "round"
-  ctx.globalCompositeOperation = "screen"
+  return false unless arcs.length > 0
+  # ctx.lineCap = "round"
+  # ctx.lineJoin = "round"
 
   for arc, i in arcs by -1
     a = arc.a
@@ -28,8 +28,9 @@ surfaces.arcs.render = (ctx, t, dt)->
     ctx.beginPath()
     ctx.moveTo x, y
 
-    ctx.globalAlpha = Math.min a.deathFrac, b.deathFrac
-    ctx.strokeStyle = a.style
+    ctx.globalAlpha = Math.pow Math.min(a.deathFrac, b.deathFrac), .8
+    light = scale a.light, 0, 100, 40, 100, true
+    ctx.strokeStyle = "hsl(#{a.hue}, 100%, #{light}%)"
     ctx.lineWidth = scale a.radius + b.radius, 2, maxParticleRadius*2, 1, 5, true
 
     for s in [1..steps]
@@ -49,4 +50,4 @@ surfaces.arcs.render = (ctx, t, dt)->
       ctx.lineTo x, y
 
     ctx.stroke()
-  null
+  true

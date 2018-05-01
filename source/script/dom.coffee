@@ -13,19 +13,18 @@ setupSurface = (surface)->
 
 
 resize = ()->
-  width = container.offsetWidth * dpr
-  height = container.offsetHeight * dpr
+  width = container.offsetWidth
+  height = container.offsetHeight
   for name, surface of surfaces
-    scale = surface.scale or 1
-    surface.canvas.width = width * scale
-    surface.canvas.height = height * scale
+    surface.canvas.width = width
+    surface.canvas.height = height
     surface.resize?(surface)
   null
 
 
 requestResize = ()->
-  widthChanged = 2 < Math.abs width - container.offsetWidth * dpr
-  heightChanged = 50 < Math.abs height - container.offsetHeight * dpr
+  widthChanged = 2 < Math.abs width - container.offsetWidth
+  heightChanged = 50 < Math.abs height - container.offsetHeight
   if widthChanged or heightChanged
     requestAnimationFrame (time)->
       first = true

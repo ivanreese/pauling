@@ -38,6 +38,8 @@ surfaces.particles.move = (x, y, t, dt)->
 
 
 surfaces.particles.simulate = (t, dt)->
+  return unless particles.length > 0
+
   currentParticleEnergy *= .9
 
   deadIndex = null
@@ -53,7 +55,7 @@ surfaces.particles.simulate = (t, dt)->
     if particles.length > maxParticles
       particle.maxAge -= .1*(particles.length-maxParticles)/maxParticles
 
-    particle.r = scale Math.pow(ageFrac, 4), 0, 1, 10, 80 + 40 * particle.energyFrac
+    particle.r = scale Math.pow(ageFrac, 2), 0, 1, 10, 80 + 40 * particle.energyFrac
 
     particle.x = particle.sx + particle.r * sampleNoisePhasor(particle.xName, t).v
     particle.y = particle.sy + particle.r * sampleNoisePhasor(particle.yName, t).v
@@ -66,15 +68,16 @@ surfaces.particles.simulate = (t, dt)->
     particle.radius = radiusFrac * maxParticleRadius
 
     if particle.birthFrac < 1
-      h = scale particle.birthFrac, 0, 1, 42, 20
-      particle.style = "hsl(#{h},100%,50%)"
+      particle.hue = scale particle.birthFrac, 0, 1, 42, 20
+      particle.sat = "100"
+      particle.light = "50"
     else
-      h = scale frac, 0, 1, 198, 284
-      s = scale frac, 0, 1, 100, 44
-      l = Math.min 100, scale frac, 0, 1, 44, 55/particle.deathFrac
-      particle.style = "hsl(#{h},#{s}%,#{l}%)"
+      particle.hue = scale frac, 0, 1, 198, 284
+      particle.sat = scale frac, 0, 1, 100, 44
+      particle.light = Math.min 100, scale frac, 0, 1, 44, 55/particle.deathFrac
+    particle.style = "hsl(#{particle.hue},#{particle.sat}%,#{particle.light}%)"
 
-    if particle.deathFrac < 1 and particle.spawnCount++ % 3 is 0
+    if particle.deathFrac < 1 and particle.spawnCount++ % 4 is 0
       spawnSnow particle.id, particle.x, particle.y, particle.radius/10, particle.deathFrac
 
     if particle.age > particle.maxAge
@@ -93,6 +96,7 @@ surfaces.particles.simulate = (t, dt)->
 
 
 surfaces.particles.render = (ctx, t)->
+  return false unless particles.length > 0
   for particle, i in particles
     frac = i/particles.length
 
@@ -109,4 +113,4 @@ surfaces.particles.render = (ctx, t)->
         ctx.lineTo particle.x + particle.radius * Math.cos(ang), particle.y + particle.radius * Math.sin(ang)
     ctx.fill()
 
-  null
+  true

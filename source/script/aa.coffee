@@ -3,12 +3,9 @@
 API = null
 
 surfaces =
-  vectors:
-    doSimulate: true
   snow:
     doSimulate: true
     doRender: true
-    scale: 1
   snowbuffer:
     doRender: true
     doSimulate: true
@@ -23,7 +20,6 @@ surfaces =
 
 container = null
 
-dpr = 1#Math.max 1, Math.round(window.devicePixelRatio)
 width = 0
 height = 0
 
@@ -49,15 +45,6 @@ phasorComplexityTuning = 1/50
 
 phasors = {}
 
-noiseRadius = .1
-circleSpeed = .1
-
-noiseMemory = []
-
-hue = 227
-sat = 15
-bgLightness = 15
-
 particles = []
 maxParticles = 400
 minParticleArcDist = 5
@@ -68,22 +55,18 @@ lastParticleY = null
 particleMinEnergy = 1
 particleMaxEnergy = 30
 maxParticleRadius = 70
-lastParticleSpawnTime = -10000
 currentParticleEnergy = 0
-maxArcsPerParticle = 5
-particleMoveCount = 0
 
 arcs = []
 
 vectorSpacing = 100
 vectors = []
-vectorFading = 0
 
 snow = []
-maxSnow = 1000
-worstSnow = 500
-bestSnow = 1000
+maxSnow = 600
+worstSnow = 400
+bestSnow = 900
 snowId = 0
 
-fadeTime = 30
+fadeTime = 25
 bufferTime = 0
