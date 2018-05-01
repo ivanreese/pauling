@@ -29,13 +29,8 @@ surfaces.particles.move = (x, y, t, dt)->
     dy = particle.sy - pair.sy
     dist = Math.sqrt dx*dx + dy*dy
     arcEnergy = 10 * (particle.energy + pair.energy) / dist
-    if arcEnergy > 1
-      particle.arcs++
-      pair.arcs++
-      makeArc pair, particle, dist, arcEnergy
-  lastParticleX = x
-  lastParticleY = y
-
+    makeArc pair, particle, dist, arcEnergy if arcEnergy > 1
+  null
 
 surfaces.particles.simulate = (t, dt)->
   return unless particles.length > 0
