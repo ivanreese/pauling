@@ -1,5 +1,3 @@
-"use strict"
-
 API = null
 
 surfaces =
