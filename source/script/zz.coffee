@@ -18,6 +18,8 @@ window.Pauling = (c)->
       return if running
       running = true
       render()
+      undefined
 
     stop: ()->
       running = false
+      undefined
