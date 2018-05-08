@@ -47,7 +47,7 @@ spawnSnow = (particleId, x, y, radius, particleAgeFrac)->
     age: 0
     id: id
     sat: scale Math.pow(0.5*(Math.pow(2*satFrac - 1, 3)+1), 2), 0, 1, 10, 90
-    maxAge: 3 + Math.pow(particleAgeFrac, 3) * 20
+    maxAge: 3 + Math.pow(particleAgeFrac, 2) * 10
     radius: radius/2
 
 
@@ -110,9 +110,9 @@ surfaces.snow.render = (ctx, t, dt)->
 
   snowHue = scale sampleNoisePhasor("snowHue", t).v, -1, 1, 270, 210
   snowLight = scale sampleNoisePhasor("snowLight", t).v, -1, 1, 65, 100
+  ctx.lineWidth = .5
   for s, i in snow
     ctx.beginPath()
-    ctx.lineWidth = (.5 + s.ageFracInv) * s.radius
     ctx.strokeStyle = "hsla(#{snowHue},#{s.sat}%,#{snowLight}%,#{s.alpha})"
     ctx.moveTo s.ox, s.oy
     ctx.lineTo s.x, s.y
