@@ -1,1 +1,792 @@
-(function(){var a,w,x,e,t,u,r,b,o,i,p,l,F,N,s,A,h,S,c,f,d,q,R,T,C,k,g,m,y,M,v,z,L,P,E,H,I,O,W,X,Y,j,B,D,G,J,K,Q,U,V,Z,$,_,ee,te;I=Y=!(V={snow:{doSimulate:!(a=null),doRender:!0},snowbuffer:{doRender:!0,doSimulate:!0},particles:{doSimulate:!0,doRender:!0,clear:!0},arcs:{doSimulate:!0,doRender:!0,clear:!0}}),h=!1,E={},L=[],k=m=g=f=c=d=l=null,b=[],$=100,_=[],K=[],C=600,i=Q=F=z=M=y=te=S=ee=0,R=function(e,t,n,a){return b.push({a:e,b:t,dist:n,energy:a})},V.arcs.render=function(e,t,n){var a,r,o,i,l,s,u,h,c,f,d,g,m,y,M,v,p,w,x,F;if(!(0<b.length))return!1;for(h=c=b.length-1;0<=c;h=c+=-1)if(a=(r=b[h]).a,o=r.b,a.dead||o.dead)b.splice(h,1);else{for(s=.5+2*a.ageFrac,y=Math.ceil(s*r.dist/13),M=a.sx+a.r*j(a.xName,t).v,w=a.sy+a.r*j(a.yName,t).v,e.beginPath(),e.moveTo(M,w),e.globalAlpha=Math.pow(Math.min(a.deathFrac,o.deathFrac),.8),d=B(a.light,0,100,40,100,!0),e.strokeStyle="hsl("+a.hue+", 100%, "+d+"%)",e.lineWidth=B(a.radius+o.radius,2,140,1,5,!0),m=f=1,g=y;1<=g?f<=g:g<=f;m=1<=g?++f:--f)i=t-s*(u=m/y),l=t-s*(1-u),v=a.sx+a.r*j(a.xName,i).v,x=a.sy+a.r*j(a.yName,i).v,p=o.sx+o.r*j(o.xName,l).v,F=o.sy+o.r*j(o.yName,l).v,M=q(v,p,u),w=q(x,F,u),e.lineTo(M,w);e.stroke()}return!0},r=function(e){return e.style.position="absolute",e.style.top=e.style.left="0",e.style.width=e.style.height="100%"},G=function(e){return e.canvas=document.createElement("canvas"),l.appendChild(e.canvas),r(e.canvas),e.context=e.canvas.getContext("2d"),"function"==typeof e.setup?e.setup(e):void 0},X=function(){var e,t;for(e in ee=l.offsetWidth,S=l.offsetHeight,V)(t=V[e]).canvas.width=ee,t.canvas.height=S,"function"==typeof t.resize&&t.resize(t);return null},W=function(){var e,t;if(t=2<Math.abs(ee-l.offsetWidth),e=50<Math.abs(S-l.offsetHeight),t||e)return requestAnimationFrame(function(e){if(!0,X(),!I)return H()})},D=function(){return window.addEventListener("mousemove",function(e){return h=!0,y=e.clientX,M=e.clientY}),window.addEventListener("touchmove",function(e){return h=!0,y=e.touches[0].clientX,M=e.touches[0].clientY})},t=Math.PI,u=2*t,p=function(e,t,n){return null==t&&(t=0),null==n&&(n=1),Math.min(n,Math.max(t,e))},B=function(e,t,n,a,r,o){return null==t&&(t=0),null==n&&(n=1),null==a&&(a=0),null==r&&(r=1),null==o&&(o=!1),t===n?a:(o&&(e=p(e,t,n)),e-=t,e/=n-t,e*=r-a,e+=a)},q=function(e,t,n){return(1-n)*e+n*t},T=function(e,t,n,a,r,o){return null==n&&(n=1),null==a&&(a=0),null==r&&(r=0),null==o&&(o=0),E[e]={name:e,type:"noise",radius:.02*n,cycleTime:t,phase:a*u,xOffset:.02*r,yOffset:.02*o}},j=function(e,t,n){var a,r,o,i;return null==n&&(n=J),a=(r=E[e]).phase+u*t/r.cycleTime,{x:o=Math.cos(a),y:i=Math.sin(a),v:n(r.xOffset+r.radius*o,r.yOffset+r.radius*i)}},N=function(e){return delete E[e]},w=.5*(Math.sqrt(3)-1),x=(3-Math.sqrt(3))/6,(e=function(e,t,n){this.x=e,this.y=t,this.z=n}).prototype.dot2=function(e,t){return this.x*e+this.y*t},e.prototype.dot3=function(e,t,n){return this.x*e+this.y*t+this.z*n},s=[new e(1,1,0),new e(-1,1,0),new e(1,-1,0),new e(-1,-1,0),new e(1,0,1),new e(-1,0,1),new e(1,0,-1),new e(-1,0,-1),new e(0,1,1),new e(0,-1,1),new e(0,1,-1),new e(0,-1,-1)],v=[151,160,137,91,90,15,131,13,201,95,96,53,194,233,7,225,140,36,103,30,69,142,8,99,37,240,21,10,23,190,6,148,247,120,234,75,0,26,197,62,94,252,219,203,117,35,11,32,57,177,33,88,237,149,56,87,174,20,125,136,171,168,68,175,74,165,71,134,139,48,27,166,77,146,158,231,83,111,229,122,60,211,133,230,220,105,92,41,55,46,245,40,244,102,143,54,65,25,63,161,1,216,80,73,209,76,132,187,208,89,18,169,200,196,135,130,116,188,159,86,164,100,109,198,173,186,3,64,52,217,226,250,124,123,5,202,38,147,118,126,255,82,85,212,207,206,59,227,47,16,58,17,182,189,28,42,223,183,170,213,119,248,152,2,44,154,163,70,221,153,101,155,167,43,172,9,129,22,39,253,19,98,108,110,79,113,224,232,178,185,112,104,218,246,97,228,251,34,242,193,238,210,144,12,191,179,162,241,81,51,145,235,249,14,239,107,49,192,214,31,181,199,106,157,184,84,204,176,115,121,50,45,127,4,150,254,138,236,205,93,222,114,67,29,24,72,243,141,128,195,78,66,215,61,156,180],P=new Array(512),A=new Array(512),function(e){var t,n;for(0<e&&e<1&&(e*=65536),(e=Math.floor(e))<256&&(e|=e<<8),t=0;t<256;)n=void 0,n=1&t?v[t]^255&e:v[t]^e>>8&255,P[t]=P[t+256]=n,A[t]=A[t+256]=s[n%12],t++}(0),J=function(e,t){var n,a,r,o,i,l,s,u,h,c,f,d,g,m,y,M,v,p;return void 0,u=(e+t)*w,o=Math.floor(e+u),s=i=void 0,(M=t-(l=Math.floor(t+u))+(h=(o+l)*x))<(g=e-o+h)?(i=1,s=0):(i=0,s=1),m=g-i+x,v=M-s+x,y=g-1+2*x,p=M-1+2*x,n=A[(o&=255)+P[l&=255]],a=A[o+i+P[l+s]],r=A[o+1+P[l+1]],70*(((c=.5-g*g-M*M)<0?0:(c*=c)*c*n.dot2(g,M))+((f=.5-m*m-v*v)<0?0:(f*=f)*f*a.dot2(m,v))+((d=.5-y*y-p*p)<0?0:(d*=d)*d*r.dot2(y,p)))},V.particles.move=function(e,t,n,a){var r,o,i,l,s,u,h,c,f,d,g,m,y,M,v;for(F+=.01*Math.pow(k,1.7),F=p(F,1,30),s=Math.random()*F,u=B(s,1,30,.01,1,!0),v="particle"+(c=z++)+"y",T(M="particle"+c+"x",10,20,0,1e3*Math.random(),0),T(v,10,20,0,1e3*Math.random(),0),L.push(g={sx:e+(Math.random()-.5)*B(u,0,1,10,220),sy:t+(Math.random()-.5)*B(u,0,1,10,220),birth:n,maxAge:1.1,dead:!1,energy:s,energyFrac:u,xName:M,yName:v,shape:Math.floor(9*Math.pow(Math.random(),2.5)),angle:Math.random(),arcs:0,id:c,spawnCount:0}),h=f=m=L.length-3,y=L.length-1;m<=y?f<y:y<f;h=m<=y?++f:--f)0<h&&(d=L[h],i=g.sx-d.sx,l=g.sy-d.sy,o=Math.sqrt(i*i+l*l),1<(r=10*(g.energy+d.energy)/o)&&R(d,g,o,r));return null},V.particles.simulate=function(e,t){var n,a,r,o,i,l,s,u,h,c,f;if(0<L.length){for(F*=.9,o=null,l=s=L.length-1;0<=s;l=s+=-1)if(h=L[l],i=l/L.length,h.age=e-h.birth,a=h.age/h.maxAge,r=1-(h.ageFrac=a),400<L.length&&(h.maxAge-=.1*(L.length-400)/400),h.r=B(Math.pow(a,2),0,1,10,80+40*h.energyFrac),h.x=h.sx+h.r*j(h.xName,e).v,h.y=h.sy+h.r*j(h.yName,e).v,h.birthFrac=Math.min(1,5*a),h.deathFrac=Math.min(1,r/.7),n=Math.min(r,Math.sqrt(h.birthFrac)),c=Math.pow(h.energyFrac*n,.5),h.radius=70*c,h.birthFrac<1?(h.hue=B(h.birthFrac,0,1,42,20),h.sat="100",h.light="50"):(h.hue=B(i,0,1,198,284),h.sat=B(i,0,1,100,44),h.light=Math.min(100,B(i,0,1,44,55/h.deathFrac))),h.style="hsl("+h.hue+","+h.sat+"%,"+h.light+"%)",h.deathFrac<1&&h.spawnCount++%4==0&&U(h.id,h.x,h.y,h.radius/10,h.deathFrac),h.age>h.maxAge){o=l;break}if(null!=o){for(l=u=0,f=o;0<=f?u<=f:f<=u;l=0<=f?++u:--u)(h=L[l]).dead=!0,N(h.xName),N(h.yName);L.splice(0,o+1)}return null}},V.particles.render=function(e,t){var n,a,r,o,i,l,s;if(!(0<L.length))return!1;for(a=r=0,i=L.length;r<i;a=++r){if(l=L[a],a/L.length,e.beginPath(),e.fillStyle=l.style,l.shape<3)e.arc(l.x,l.y,l.radius,0,u);else for(e.moveTo(l.x+l.radius*Math.cos(u*l.angle),l.y+l.radius*Math.sin(u*l.angle)),v=o=1,s=l.shape;1<=s?o<=s:s<=o;v=1<=s?++o:--o)n=u*(l.angle+v/l.shape),e.lineTo(l.x+l.radius*Math.cos(n),l.y+l.radius*Math.sin(n));e.fill()}return!0},O=function(){if(!I)return I=!0,requestAnimationFrame(H)},o=function(e){return f=c=null,"function"==typeof e?e():void 0},H=function(e){var t,n,a,r;if(I=!1,Y&&O(),document.hidden)return o(null);if(isNaN(e))return o(O);for(a in null==d&&(d=e-16),t=Math.min(50,e-d),d=e,te+=n=.001*t,h&null!=c?(g=c-y,m=f-M,k=Math.sqrt(g*g+m*m)):(c=y,f=M,k=m=g=0),V)(r=V[a]).doSimulate&&(h&&"function"==typeof r.move&&r.move(y,M,te,n),"function"==typeof r.simulate&&r.simulate(te,n));for(a in V)(r=V[a]).doSimulate&&r.doRender&&(r.clear&&r.needsClear&&r.context.clearRect(0,0,ee,S),r.needsClear="function"==typeof r.render?r.render(r.context,te,n):void 0);return h=!1,c=y,f=M},V.snow.setup=function(e){return T("snowLight",100,40,1e3*Math.random()),T("snowHue",30,40,1e3*Math.random())},V.snow.resize=function(e){var t,n,a,r,o,i,l,s,u,h,c,f,d,g,m,y,M,v,p;for(r=0,i=_.length;r<i;r++)for(o=0,l=(m=_[r]).length;o<l;o++)g=m[o],N(g.aName),N(g.sName);for(_=[],d=Math.min(ee,S),$=Math.floor(d/10),M=Math.ceil(ee/$),p=Math.ceil(S/$),n=s=0,h=M;0<=h?s<=h:h<=s;n=0<=h?++s:--s)for(y=n*$,_[n]=[],a=u=0,c=p;0<=c?u<=c:c<=u;a=0<=c?++u:--u)f="vectors-"+y+"-"+(v=a*$)+"s",T(t="vectors-"+y+"-"+v+"a",120,25,0,8*n,a),T(f,70,30,0,8*-n,-a),_[n].push({aName:t,sName:f,x:y,y:v,initAngle:J(n/15,a/15)});return null},U=function(e,t,n,a,r){var o,i;return K.length>C&&K.splice(0,K.length-C),o=Q++,i=e/200%1,K.push({x:t+B(Math.random(),0,1,-a,+a),y:n+B(Math.random(),0,1,-a,+a),age:0,id:o,sat:B(Math.pow(.5*(Math.pow(2*i-1,3)+1),2),0,1,10,90),maxAge:3+10*Math.pow(r,2),radius:a/2})},V.snow.simulate=function(e,t){var n,a,r,o,i,l,s,u,h,c,f,d,g,m,y,M,v,p;if(0<K.length){for(y=B(t,.015,.024,900,400,!0),C=Math.round(.9*C+.1*y),l=0,u=_.length;l<u;l++)for(s=0,h=(p=_[l]).length;s<h;s++)(v=p[s]).angle=v.initAngle+j(v.aName,e).v,v.strength=.5*j(v.sName,e).v+.5;for(i=f=K.length-1;0<=f;i=f+=-1)(d=K[i]).age+=t*B(Math.pow(K.length/C,4),0,1,1,100),d.ageFrac=d.age/d.maxAge,d.ageFracInv=1-d.ageFrac,d.alpha=Math.min(d.ageFracInv,.6),d.age>d.maxAge||d.x<0||d.y<0||d.x>ee||d.y>S?K.splice(i,1):(g=d.x/$,m=d.y/$,(c=_[Math.floor(g)])&&(n=c[Math.floor(m)],a=c[Math.ceil(m)]),(M=_[Math.ceil(g)])&&(r=M[Math.floor(m)],o=M[Math.ceil(m)]),null!=n&&null!=a&&null!=r&&null!=o?(d.ox=d.x,d.oy=d.y,Z(i,t,d,n),Z(i,t,d,a),Z(i,t,d,r),Z(i,t,d,o)):K.splice(i,1));return null}},Z=function(e,t,n,a){var r,o,i,l;if(o=a.x-n.x,i=a.y-n.y,r=Math.sqrt(o*o+i*i),0<(l=a.strength*(1-r/$)))return n.x+=300*l*t*Math.cos(a.angle*u),n.y+=300*l*t*Math.sin(a.angle*u)},V.snow.render=function(e,t,n){var a,r,o,i,l,s;if(0<K.length){for(l=B(j("snowHue",t).v,-1,1,270,210),s=B(j("snowLight",t).v,-1,1,65,100),e.lineWidth=.5,a=r=0,o=K.length;r<o;a=++r)i=K[a],e.beginPath(),e.strokeStyle="hsla("+l+","+i.sat+"%,"+s+"%,"+i.alpha+")",e.moveTo(i.ox,i.oy),e.lineTo(i.x,i.y),e.stroke();return null}},V.snowbuffer.render=function(e,t,n){return 25<(i+=k/160+n)&&(i=0,e.clearRect(0,0,ee,S),e.drawImage(V.snow.canvas,0,0,ee,S),V.snow.context.clearRect(0,0,ee,S)),V.snowbuffer.canvas.style.opacity=Math.pow(B(i,0,25,1,0,!0),.8)},window.Pauling=function(e){var t,n;if(null!=l)return a;for(t in r(l=e),l.style.backgroundColor="#222",V)n=V[t],G(n);return D(),window.addEventListener("resize",W),X(),a={start:function(){Y||(Y=!0,H())},stop:function(){Y=!1}}}}).call(this);
+(function() {
+  var API, F2, G2, Grad, PI, TAU, absolutePos, arcs, bail, bestSnow, bufferTime, clip, container, currentParticleEnergy, deletePhasor, fadeTime, grad3, gradP, granularlize, hasMoved, height, lastMouseX, lastMouseY, lastParticleX, lastParticleY, lastTime, lerp, makeArc, makeNoisePhasor, maxParticleArcDist, maxParticleRadius, maxParticles, maxSnow, minParticleArcDist, mouseDist, mouseDx, mouseDy, mouseX, mouseY, p, particleID, particleMaxEnergy, particleMinEnergy, particles, perm, phasorComplexityTuning, phasors, rand, render, renderRequested, requestRender, requestResize, resize, running, sampleNoisePhasor, scale, setSeed, setupInput, setupSurface, simplex2, snow, snowId, spawnSnow, surfaces, timeScale, vecSnowDist, vectorSpacing, vectors, width, worldTime, worstSnow;
+
+  API = null;
+
+  surfaces = {
+    snow: {
+      doSimulate: true,
+      doRender: true
+    },
+    snowbuffer: {
+      doRender: true,
+      doSimulate: true
+    },
+    particles: {
+      doSimulate: true,
+      doRender: true,
+      clear: true
+    },
+    arcs: {
+      doSimulate: true,
+      doRender: true,
+      clear: true
+    }
+  };
+
+  container = null;
+
+  width = 0;
+
+  height = 0;
+
+  running = false;
+
+  renderRequested = false;
+
+  worldTime = 0;
+
+  lastTime = null;
+
+  timeScale = 1;
+
+  hasMoved = false;
+
+  mouseX = 0;
+
+  mouseY = 0;
+
+  lastMouseX = null;
+
+  lastMouseY = null;
+
+  mouseDx = null;
+
+  mouseDy = null;
+
+  mouseDist = null;
+
+  phasorComplexityTuning = 1 / 50;
+
+  phasors = {};
+
+  particles = [];
+
+  maxParticles = 400;
+
+  minParticleArcDist = 5;
+
+  maxParticleArcDist = 100;
+
+  particleID = 0;
+
+  lastParticleX = null;
+
+  lastParticleY = null;
+
+  particleMinEnergy = 1;
+
+  particleMaxEnergy = 30;
+
+  maxParticleRadius = 70;
+
+  currentParticleEnergy = 0;
+
+  arcs = [];
+
+  vectorSpacing = 100;
+
+  vectors = [];
+
+  snow = [];
+
+  maxSnow = 600;
+
+  worstSnow = 400;
+
+  bestSnow = 900;
+
+  snowId = 0;
+
+  fadeTime = 25;
+
+  bufferTime = 0;
+
+  makeArc = function(a, b, dist, energy) {
+    return arcs.push({
+      a: a,
+      b: b,
+      dist: dist,
+      energy: energy
+    });
+  };
+
+  surfaces.arcs.render = function(ctx, t, dt) {
+    var a, arc, b, d1, d2, delay, frac, i, k, l, light, ref, s, steps, x, x1, x2, y, y1, y2;
+    if (!(arcs.length > 0)) {
+      return false;
+    }
+    for (i = k = arcs.length - 1; k >= 0; i = k += -1) {
+      arc = arcs[i];
+      a = arc.a;
+      b = arc.b;
+      if (a.dead || b.dead) {
+        delete arcs.splice(i, 1);
+        continue;
+      }
+      delay = .5 + 2 * a.ageFrac;
+      steps = Math.ceil(delay * arc.dist / 13);
+      x = a.sx + a.r * sampleNoisePhasor(a.xName, t).v;
+      y = a.sy + a.r * sampleNoisePhasor(a.yName, t).v;
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      ctx.globalAlpha = Math.pow(Math.min(a.deathFrac, b.deathFrac), .8);
+      light = scale(a.light, 0, 100, 40, 100, true);
+      ctx.strokeStyle = "hsl(" + a.hue + ", 100%, " + light + "%)";
+      ctx.lineWidth = scale(a.radius + b.radius, 2, maxParticleRadius * 2, 1, 5, true);
+      for (s = l = 1, ref = steps; 1 <= ref ? l <= ref : l >= ref; s = 1 <= ref ? ++l : --l) {
+        frac = s / steps;
+        d1 = t - delay * frac;
+        d2 = t - delay * (1 - frac);
+        x1 = a.sx + a.r * sampleNoisePhasor(a.xName, d1).v;
+        y1 = a.sy + a.r * sampleNoisePhasor(a.yName, d1).v;
+        x2 = b.sx + b.r * sampleNoisePhasor(b.xName, d2).v;
+        y2 = b.sy + b.r * sampleNoisePhasor(b.yName, d2).v;
+        x = lerp(x1, x2, frac);
+        y = lerp(y1, y2, frac);
+        ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+    }
+    return true;
+  };
+
+  absolutePos = function(elm) {
+    elm.style.position = "absolute";
+    elm.style.top = elm.style.left = "0";
+    return elm.style.width = elm.style.height = "100%";
+  };
+
+  setupSurface = function(surface) {
+    surface.canvas = document.createElement("canvas");
+    container.appendChild(surface.canvas);
+    absolutePos(surface.canvas);
+    surface.context = surface.canvas.getContext("2d");
+    return typeof surface.setup === "function" ? surface.setup(surface) : void 0;
+  };
+
+  resize = function() {
+    var name, surface;
+    width = container.offsetWidth;
+    height = container.offsetHeight;
+    for (name in surfaces) {
+      surface = surfaces[name];
+      surface.canvas.width = width;
+      surface.canvas.height = height;
+      if (typeof surface.resize === "function") {
+        surface.resize(surface);
+      }
+    }
+    return null;
+  };
+
+  requestResize = function() {
+    var heightChanged, widthChanged;
+    widthChanged = 2 < Math.abs(width - container.offsetWidth);
+    heightChanged = 50 < Math.abs(height - container.offsetHeight);
+    if (widthChanged || heightChanged) {
+      return requestAnimationFrame(function(time) {
+        var first;
+        first = true;
+        resize();
+        if (!renderRequested) {
+          return render();
+        }
+      });
+    }
+  };
+
+  setupInput = function() {
+    window.addEventListener("mousemove", function(e) {
+      hasMoved = true;
+      mouseX = e.clientX;
+      return mouseY = e.clientY;
+    });
+    return window.addEventListener("touchmove", function(e) {
+      hasMoved = true;
+      mouseX = e.touches[0].clientX;
+      return mouseY = e.touches[0].clientY;
+    });
+  };
+
+  PI = Math.PI;
+
+  TAU = PI * 2;
+
+  clip = function(input, inputMin, inputMax) {
+    if (inputMin == null) {
+      inputMin = 0;
+    }
+    if (inputMax == null) {
+      inputMax = 1;
+    }
+    return Math.min(inputMax, Math.max(inputMin, input));
+  };
+
+  scale = function(input, inputMin, inputMax, outputMin, outputMax, doClip) {
+    if (inputMin == null) {
+      inputMin = 0;
+    }
+    if (inputMax == null) {
+      inputMax = 1;
+    }
+    if (outputMin == null) {
+      outputMin = 0;
+    }
+    if (outputMax == null) {
+      outputMax = 1;
+    }
+    if (doClip == null) {
+      doClip = false;
+    }
+    if (inputMin === inputMax) {
+      return outputMin;
+    }
+    if (doClip) {
+      input = clip(input, inputMin, inputMax);
+    }
+    input -= inputMin;
+    input /= inputMax - inputMin;
+    input *= outputMax - outputMin;
+    input += outputMin;
+    return input;
+  };
+
+  lerp = function(a, b, t) {
+    return (1 - t) * a + t * b;
+  };
+
+  rand = function(min, max) {
+    if (max == null) {
+      max = min;
+      min = 0;
+    }
+    return scale(Math.random(), 0, 1, min, max);
+  };
+
+  granularlize = function(grainSize, i) {
+    return grainSize * Math.round(i / grainSize);
+  };
+
+  makeNoisePhasor = function(name, cycleTime, radius, phase, xOffset, yOffset) {
+    if (radius == null) {
+      radius = 1;
+    }
+    if (phase == null) {
+      phase = 0;
+    }
+    if (xOffset == null) {
+      xOffset = 0;
+    }
+    if (yOffset == null) {
+      yOffset = 0;
+    }
+    return phasors[name] = {
+      name: name,
+      type: "noise",
+      radius: radius * phasorComplexityTuning,
+      cycleTime: cycleTime,
+      phase: phase * TAU,
+      xOffset: xOffset * phasorComplexityTuning,
+      yOffset: yOffset * phasorComplexityTuning
+    };
+  };
+
+  sampleNoisePhasor = function(name, time, fn) {
+    var p, phasor, x, y;
+    if (fn == null) {
+      fn = simplex2;
+    }
+    phasor = phasors[name];
+    p = phasor.phase + TAU * time / phasor.cycleTime;
+    return {
+      x: x = Math.cos(p),
+      y: y = Math.sin(p),
+      v: fn(phasor.xOffset + phasor.radius * x, phasor.yOffset + phasor.radius * y)
+    };
+  };
+
+  deletePhasor = function(name) {
+    return delete phasors[name];
+  };
+
+  F2 = 0.5 * (Math.sqrt(3) - 1);
+
+  G2 = (3 - Math.sqrt(3)) / 6;
+
+  Grad = function(x, y, z) {
+    this.x = x;
+    this.y = y;
+    this.z = z;
+  };
+
+  Grad.prototype.dot2 = function(x, y) {
+    return this.x * x + this.y * y;
+  };
+
+  Grad.prototype.dot3 = function(x, y, z) {
+    return this.x * x + this.y * y + this.z * z;
+  };
+
+  grad3 = [new Grad(1, 1, 0), new Grad(-1, 1, 0), new Grad(1, -1, 0), new Grad(-1, -1, 0), new Grad(1, 0, 1), new Grad(-1, 0, 1), new Grad(1, 0, -1), new Grad(-1, 0, -1), new Grad(0, 1, 1), new Grad(0, -1, 1), new Grad(0, 1, -1), new Grad(0, -1, -1)];
+
+  p = [151, 160, 137, 91, 90, 15, 131, 13, 201, 95, 96, 53, 194, 233, 7, 225, 140, 36, 103, 30, 69, 142, 8, 99, 37, 240, 21, 10, 23, 190, 6, 148, 247, 120, 234, 75, 0, 26, 197, 62, 94, 252, 219, 203, 117, 35, 11, 32, 57, 177, 33, 88, 237, 149, 56, 87, 174, 20, 125, 136, 171, 168, 68, 175, 74, 165, 71, 134, 139, 48, 27, 166, 77, 146, 158, 231, 83, 111, 229, 122, 60, 211, 133, 230, 220, 105, 92, 41, 55, 46, 245, 40, 244, 102, 143, 54, 65, 25, 63, 161, 1, 216, 80, 73, 209, 76, 132, 187, 208, 89, 18, 169, 200, 196, 135, 130, 116, 188, 159, 86, 164, 100, 109, 198, 173, 186, 3, 64, 52, 217, 226, 250, 124, 123, 5, 202, 38, 147, 118, 126, 255, 82, 85, 212, 207, 206, 59, 227, 47, 16, 58, 17, 182, 189, 28, 42, 223, 183, 170, 213, 119, 248, 152, 2, 44, 154, 163, 70, 221, 153, 101, 155, 167, 43, 172, 9, 129, 22, 39, 253, 19, 98, 108, 110, 79, 113, 224, 232, 178, 185, 112, 104, 218, 246, 97, 228, 251, 34, 242, 193, 238, 210, 144, 12, 191, 179, 162, 241, 81, 51, 145, 235, 249, 14, 239, 107, 49, 192, 214, 31, 181, 199, 106, 157, 184, 84, 204, 176, 115, 121, 50, 45, 127, 4, 150, 254, 138, 236, 205, 93, 222, 114, 67, 29, 24, 72, 243, 141, 128, 195, 78, 66, 215, 61, 156, 180];
+
+  perm = new Array(512);
+
+  gradP = new Array(512);
+
+  setSeed = function(seed) {
+    var i, v;
+    if (seed > 0 && seed < 1) {
+      seed *= 65536;
+    }
+    seed = Math.floor(seed);
+    if (seed < 256) {
+      seed |= seed << 8;
+    }
+    i = 0;
+    while (i < 256) {
+      v = void 0;
+      if (i & 1) {
+        v = p[i] ^ seed & 255;
+      } else {
+        v = p[i] ^ seed >> 8 & 255;
+      }
+      perm[i] = perm[i + 256] = v;
+      gradP[i] = gradP[i + 256] = grad3[v % 12];
+      i++;
+    }
+  };
+
+  setSeed(0);
+
+  simplex2 = function(xin, yin) {
+    var gi0, gi1, gi2, i, i1, j, j1, n0, n1, n2, s, t, t0, t1, t2, x0, x1, x2, y0, y1, y2;
+    n0 = void 0;
+    n1 = void 0;
+    n2 = void 0;
+    s = (xin + yin) * F2;
+    i = Math.floor(xin + s);
+    j = Math.floor(yin + s);
+    t = (i + j) * G2;
+    x0 = xin - i + t;
+    y0 = yin - j + t;
+    i1 = void 0;
+    j1 = void 0;
+    if (x0 > y0) {
+      i1 = 1;
+      j1 = 0;
+    } else {
+      i1 = 0;
+      j1 = 1;
+    }
+    x1 = x0 - i1 + G2;
+    y1 = y0 - j1 + G2;
+    x2 = x0 - 1 + 2 * G2;
+    y2 = y0 - 1 + 2 * G2;
+    i &= 255;
+    j &= 255;
+    gi0 = gradP[i + perm[j]];
+    gi1 = gradP[i + i1 + perm[j + j1]];
+    gi2 = gradP[i + 1 + perm[j + 1]];
+    t0 = 0.5 - (x0 * x0) - (y0 * y0);
+    if (t0 < 0) {
+      n0 = 0;
+    } else {
+      t0 *= t0;
+      n0 = t0 * t0 * gi0.dot2(x0, y0);
+    }
+    t1 = 0.5 - (x1 * x1) - (y1 * y1);
+    if (t1 < 0) {
+      n1 = 0;
+    } else {
+      t1 *= t1;
+      n1 = t1 * t1 * gi1.dot2(x1, y1);
+    }
+    t2 = 0.5 - (x2 * x2) - (y2 * y2);
+    if (t2 < 0) {
+      n2 = 0;
+    } else {
+      t2 *= t2;
+      n2 = t2 * t2 * gi2.dot2(x2, y2);
+    }
+    return 70 * (n0 + n1 + n2);
+  };
+
+  surfaces.particles.move = function(x, y, t, dt) {
+    var arcEnergy, dist, dx, dy, energy, energyFrac, i, index, k, pair, particle, ref, ref1, xName, yName;
+    currentParticleEnergy += .01 * Math.pow(mouseDist, 1.7);
+    currentParticleEnergy = clip(currentParticleEnergy, particleMinEnergy, particleMaxEnergy);
+    energy = Math.random() * currentParticleEnergy;
+    energyFrac = scale(energy, particleMinEnergy, particleMaxEnergy, 0.01, 1, true);
+    index = particleID++;
+    xName = "particle" + index + "x";
+    yName = "particle" + index + "y";
+    makeNoisePhasor(xName, 10, 20, 0, Math.random() * 1000, 0);
+    makeNoisePhasor(yName, 10, 20, 0, Math.random() * 1000, 0);
+    particles.push(particle = {
+      sx: x + (Math.random() - .5) * scale(energyFrac, 0, 1, 10, 220),
+      sy: y + (Math.random() - .5) * scale(energyFrac, 0, 1, 10, 220),
+      birth: t,
+      maxAge: 1.1,
+      dead: false,
+      energy: energy,
+      energyFrac: energyFrac,
+      xName: xName,
+      yName: yName,
+      shape: Math.floor(Math.pow(Math.random(), 2.5) * 9),
+      angle: Math.random(),
+      arcs: 0,
+      id: index,
+      spawnCount: 0
+    });
+    for (i = k = ref = particles.length - 3, ref1 = particles.length - 1; ref <= ref1 ? k < ref1 : k > ref1; i = ref <= ref1 ? ++k : --k) {
+      if (!(i > 0)) {
+        continue;
+      }
+      pair = particles[i];
+      dx = particle.sx - pair.sx;
+      dy = particle.sy - pair.sy;
+      dist = Math.sqrt(dx * dx + dy * dy);
+      arcEnergy = 10 * (particle.energy + pair.energy) / dist;
+      if (arcEnergy > 1) {
+        makeArc(pair, particle, dist, arcEnergy);
+      }
+    }
+    return null;
+  };
+
+  surfaces.particles.simulate = function(t, dt) {
+    var ageFactor, ageFrac, ageFracInv, deadIndex, frac, i, k, l, particle, radiusFrac, ref;
+    if (!(particles.length > 0)) {
+      return;
+    }
+    currentParticleEnergy *= .9;
+    deadIndex = null;
+    for (i = k = particles.length - 1; k >= 0; i = k += -1) {
+      particle = particles[i];
+      frac = i / particles.length;
+      particle.age = t - particle.birth;
+      ageFrac = particle.age / particle.maxAge;
+      particle.ageFrac = ageFrac;
+      ageFracInv = 1 - ageFrac;
+      if (particles.length > maxParticles) {
+        particle.maxAge -= .1 * (particles.length - maxParticles) / maxParticles;
+      }
+      particle.r = scale(Math.pow(ageFrac, 2), 0, 1, 10, 80 + 40 * particle.energyFrac);
+      particle.x = particle.sx + particle.r * sampleNoisePhasor(particle.xName, t).v;
+      particle.y = particle.sy + particle.r * sampleNoisePhasor(particle.yName, t).v;
+      particle.birthFrac = Math.min(1, ageFrac * 5);
+      particle.deathFrac = Math.min(1, ageFracInv / .7);
+      ageFactor = Math.min(ageFracInv, Math.sqrt(particle.birthFrac));
+      radiusFrac = Math.pow(particle.energyFrac * ageFactor, .5);
+      particle.radius = radiusFrac * maxParticleRadius;
+      if (particle.birthFrac < 1) {
+        particle.hue = scale(particle.birthFrac, 0, 1, 42, 20);
+        particle.sat = "100";
+        particle.light = "50";
+      } else {
+        particle.hue = scale(frac, 0, 1, 198, 284);
+        particle.sat = scale(frac, 0, 1, 100, 44);
+        particle.light = Math.min(100, scale(frac, 0, 1, 44, 55 / particle.deathFrac));
+      }
+      particle.style = "hsl(" + particle.hue + "," + particle.sat + "%," + particle.light + "%)";
+      if (particle.deathFrac < 1 && particle.spawnCount++ % 4 === 0) {
+        spawnSnow(particle.id, particle.x, particle.y, particle.radius / 10, particle.deathFrac);
+      }
+      if (particle.age > particle.maxAge) {
+        deadIndex = i;
+        break;
+      }
+    }
+    if (deadIndex != null) {
+      for (i = l = 0, ref = deadIndex; 0 <= ref ? l <= ref : l >= ref; i = 0 <= ref ? ++l : --l) {
+        particle = particles[i];
+        particle.dead = true;
+        deletePhasor(particle.xName);
+        deletePhasor(particle.yName);
+      }
+      particles.splice(0, deadIndex + 1);
+    }
+    return null;
+  };
+
+  surfaces.particles.render = function(ctx, t) {
+    var ang, frac, i, k, l, len, particle, ref;
+    if (!(particles.length > 0)) {
+      return false;
+    }
+    for (i = k = 0, len = particles.length; k < len; i = ++k) {
+      particle = particles[i];
+      frac = i / particles.length;
+      ctx.beginPath();
+      ctx.fillStyle = particle.style;
+      if (particle.shape < 3) {
+        ctx.arc(particle.x, particle.y, particle.radius, 0, TAU);
+      } else {
+        ctx.moveTo(particle.x + particle.radius * Math.cos(TAU * particle.angle), particle.y + particle.radius * Math.sin(TAU * particle.angle));
+        for (p = l = 1, ref = particle.shape; 1 <= ref ? l <= ref : l >= ref; p = 1 <= ref ? ++l : --l) {
+          ang = TAU * (particle.angle + p / particle.shape);
+          ctx.lineTo(particle.x + particle.radius * Math.cos(ang), particle.y + particle.radius * Math.sin(ang));
+        }
+      }
+      ctx.fill();
+    }
+    return true;
+  };
+
+  requestRender = function() {
+    if (!renderRequested) {
+      renderRequested = true;
+      return requestAnimationFrame(render);
+    }
+  };
+
+  bail = function(fn) {
+    lastMouseX = null;
+    lastMouseY = null;
+    return typeof fn === "function" ? fn() : void 0;
+  };
+
+  render = function(currentTime) {
+    var deltaMs, dt, name, surface;
+    renderRequested = false;
+    if (running) {
+      requestRender();
+    }
+    if (document.hidden) {
+      return bail(null);
+    }
+    if (isNaN(currentTime)) {
+      return bail(requestRender);
+    }
+    if (lastTime == null) {
+      lastTime = currentTime - 16;
+    }
+    deltaMs = Math.min(50, currentTime - lastTime);
+    dt = timeScale / 1000 * deltaMs;
+    lastTime = currentTime;
+    worldTime += dt;
+    if (hasMoved & (lastMouseX != null)) {
+      mouseDx = lastMouseX - mouseX;
+      mouseDy = lastMouseY - mouseY;
+      mouseDist = Math.sqrt(mouseDx * mouseDx + mouseDy * mouseDy);
+    } else {
+      lastMouseX = mouseX;
+      lastMouseY = mouseY;
+      mouseDx = 0;
+      mouseDy = 0;
+      mouseDist = 0;
+    }
+    for (name in surfaces) {
+      surface = surfaces[name];
+      if (!surface.doSimulate) {
+        continue;
+      }
+      if (hasMoved) {
+        if (typeof surface.move === "function") {
+          surface.move(mouseX, mouseY, worldTime, dt);
+        }
+      }
+      if (typeof surface.simulate === "function") {
+        surface.simulate(worldTime, dt);
+      }
+    }
+    for (name in surfaces) {
+      surface = surfaces[name];
+      if (!(surface.doSimulate && surface.doRender)) {
+        continue;
+      }
+      if (surface.clear && surface.needsClear) {
+        surface.context.clearRect(0, 0, width, height);
+      }
+      surface.needsClear = typeof surface.render === "function" ? surface.render(surface.context, worldTime, dt) : void 0;
+    }
+    hasMoved = false;
+    lastMouseX = mouseX;
+    return lastMouseY = mouseY;
+  };
+
+  surfaces.snow.setup = function(surface) {
+    makeNoisePhasor("snowLight", 100, 40, 1000 * Math.random());
+    return makeNoisePhasor("snowHue", 30, 40, 1000 * Math.random());
+  };
+
+  surfaces.snow.resize = function(surface) {
+    var aName, i, j, k, l, len, len1, m, n, ref, ref1, sName, size, vec, vecList, x, xVecs, y, yVecs;
+    for (k = 0, len = vectors.length; k < len; k++) {
+      vecList = vectors[k];
+      for (l = 0, len1 = vecList.length; l < len1; l++) {
+        vec = vecList[l];
+        deletePhasor(vec.aName);
+        deletePhasor(vec.sName);
+      }
+    }
+    vectors = [];
+    size = Math.min(width, height);
+    vectorSpacing = Math.floor(size / 10);
+    xVecs = Math.ceil(width / vectorSpacing);
+    yVecs = Math.ceil(height / vectorSpacing);
+    for (i = m = 0, ref = xVecs; 0 <= ref ? m <= ref : m >= ref; i = 0 <= ref ? ++m : --m) {
+      x = i * vectorSpacing;
+      vectors[i] = [];
+      for (j = n = 0, ref1 = yVecs; 0 <= ref1 ? n <= ref1 : n >= ref1; j = 0 <= ref1 ? ++n : --n) {
+        y = j * vectorSpacing;
+        aName = "vectors-" + x + "-" + y + "a";
+        sName = "vectors-" + x + "-" + y + "s";
+        makeNoisePhasor(aName, 120, 25, 0, i * 8, j);
+        makeNoisePhasor(sName, 70, 30, 0, -i * 8, -j);
+        vectors[i].push({
+          aName: aName,
+          sName: sName,
+          x: x,
+          y: y,
+          initAngle: simplex2(i / 15, j / 15)
+        });
+      }
+    }
+    return null;
+  };
+
+  spawnSnow = function(particleId, x, y, radius, particleAgeFrac) {
+    var id, satFrac;
+    if (snow.length > maxSnow) {
+      snow.splice(0, snow.length - maxSnow);
+    }
+    id = snowId++;
+    satFrac = (particleId / 200) % 1;
+    return snow.push({
+      x: x + scale(Math.random(), 0, 1, -radius, +radius),
+      y: y + scale(Math.random(), 0, 1, -radius, +radius),
+      age: 0,
+      id: id,
+      sat: scale(Math.pow(0.5 * (Math.pow(2 * satFrac - 1, 3) + 1), 2), 0, 1, 10, 90),
+      maxAge: 3 + Math.pow(particleAgeFrac, 2) * 10,
+      radius: radius / 2
+    });
+  };
+
+  surfaces.snow.simulate = function(t, dt) {
+    var a, b, c, d, i, k, l, len, len1, lower, m, s, scaledX, scaledY, targetSnow, upper, vec, vecList;
+    if (!(snow.length > 0)) {
+      return;
+    }
+    targetSnow = scale(dt, .015, .024, bestSnow, worstSnow, true);
+    maxSnow = Math.round(maxSnow * .9 + targetSnow * .1);
+    for (k = 0, len = vectors.length; k < len; k++) {
+      vecList = vectors[k];
+      for (l = 0, len1 = vecList.length; l < len1; l++) {
+        vec = vecList[l];
+        vec.angle = vec.initAngle + sampleNoisePhasor(vec.aName, t).v;
+        vec.strength = sampleNoisePhasor(vec.sName, t).v * .5 + .5;
+      }
+    }
+    for (i = m = snow.length - 1; m >= 0; i = m += -1) {
+      s = snow[i];
+      s.age += dt * scale(Math.pow(snow.length / maxSnow, 4), 0, 1, 1, 100);
+      s.ageFrac = s.age / s.maxAge;
+      s.ageFracInv = 1 - s.ageFrac;
+      s.alpha = Math.min(s.ageFracInv, .6);
+      if (s.age > s.maxAge || s.x < 0 || s.y < 0 || s.x > width || s.y > height) {
+        snow.splice(i, 1);
+        continue;
+      }
+      scaledX = s.x / vectorSpacing;
+      scaledY = s.y / vectorSpacing;
+      if (lower = vectors[Math.floor(scaledX)]) {
+        a = lower[Math.floor(scaledY)];
+        b = lower[Math.ceil(scaledY)];
+      }
+      if (upper = vectors[Math.ceil(scaledX)]) {
+        c = upper[Math.floor(scaledY)];
+        d = upper[Math.ceil(scaledY)];
+      }
+      if ((a != null) && (b != null) && (c != null) && (d != null)) {
+        s.ox = s.x;
+        s.oy = s.y;
+        vecSnowDist(i, dt, s, a);
+        vecSnowDist(i, dt, s, b);
+        vecSnowDist(i, dt, s, c);
+        vecSnowDist(i, dt, s, d);
+      } else {
+        snow.splice(i, 1);
+      }
+    }
+    return null;
+  };
+
+  vecSnowDist = function(i, dt, s, vec) {
+    var dist, dx, dy, strength;
+    dx = vec.x - s.x;
+    dy = vec.y - s.y;
+    dist = Math.sqrt(dx * dx + dy * dy);
+    strength = vec.strength * (1 - dist / vectorSpacing);
+    if (strength > 0) {
+      s.x += strength * 300 * dt * Math.cos(vec.angle * TAU);
+      return s.y += strength * 300 * dt * Math.sin(vec.angle * TAU);
+    }
+  };
+
+  surfaces.snow.render = function(ctx, t, dt) {
+    var i, k, len, s, snowHue, snowLight;
+    if (!(snow.length > 0)) {
+      return;
+    }
+    snowHue = scale(sampleNoisePhasor("snowHue", t).v, -1, 1, 270, 210);
+    snowLight = scale(sampleNoisePhasor("snowLight", t).v, -1, 1, 65, 100);
+    ctx.lineWidth = .5;
+    for (i = k = 0, len = snow.length; k < len; i = ++k) {
+      s = snow[i];
+      ctx.beginPath();
+      ctx.strokeStyle = "hsla(" + snowHue + "," + s.sat + "%," + snowLight + "%," + s.alpha + ")";
+      ctx.moveTo(s.ox, s.oy);
+      ctx.lineTo(s.x, s.y);
+      ctx.stroke();
+    }
+    return null;
+  };
+
+  surfaces.snowbuffer.render = function(ctx, t, dt) {
+    bufferTime += mouseDist / 160 + dt;
+    if (bufferTime > fadeTime) {
+      bufferTime = 0;
+      ctx.clearRect(0, 0, width, height);
+      ctx.drawImage(surfaces.snow.canvas, 0, 0, width, height);
+      surfaces.snow.context.clearRect(0, 0, width, height);
+    }
+    return surfaces.snowbuffer.canvas.style.opacity = Math.pow(scale(bufferTime, 0, fadeTime, 1, 0, true), .8);
+  };
+
+  window.Pauling = function(c) {
+    var name, surface;
+    if (container != null) {
+      return API;
+    }
+    container = c;
+    absolutePos(container);
+    container.style.backgroundColor = "#222";
+    for (name in surfaces) {
+      surface = surfaces[name];
+      setupSurface(surface);
+    }
+    setupInput();
+    window.addEventListener("resize", requestResize);
+    resize();
+    return API = {
+      start: function() {
+        if (running) {
+          return;
+        }
+        running = true;
+        render();
+        return void 0;
+      },
+      stop: function() {
+        running = false;
+        return void 0;
+      }
+    };
+  };
+
+}).call(this);
