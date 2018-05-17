@@ -1,25 +1,41 @@
-window.Pauling = (c)->
-  return API if container?
+start = (c)->
+  return if running
+  running = true
 
   container = c
 
   absolutePos container
   container.style.backgroundColor = "#222"
 
+  resetDefaults()
+
   setupSurface surface for name, surface of surfaces
 
-  setupInput()
-
+  window.addEventListener "mousemove", mousemove
+  window.addEventListener "touchmove", touchmove
   window.addEventListener "resize", requestResize
+
   resize()
 
-  return API =
-    start: ()->
-      return if running
-      running = true
-      render()
-      undefined
+  render()
+  undefined
 
-    stop: ()->
-      running = false
-      undefined
+
+stop = ()->
+  running = false
+
+  clearContainer()
+
+  window.removeEventListener "mousemove", mousemove
+  window.removeEventListener "touchmove", touchmove
+  window.removeEventListener "resize", requestResize
+
+  undefined
+
+
+API =
+  start: start
+  stop: stop
+
+
+window.Pauling = ()-> API

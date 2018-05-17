@@ -12,6 +12,10 @@ setupSurface = (surface)->
   surface.setup? surface
 
 
+clearContainer = ()->
+  container.innerHTML = ""
+
+
 resize = ()->
   width = container.offsetWidth
   height = container.offsetHeight

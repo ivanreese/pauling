@@ -16,6 +16,7 @@ surfaces =
     doRender: true
     clear: true
 
+
 container = null
 
 width = 0
@@ -68,3 +69,17 @@ snowId = 0
 
 fadeTime = 25
 bufferTime = 0
+
+resetDefaults = ()->
+  phasors = {}
+  particles = []
+  particleID = 0
+  lastParticleX = null
+  lastParticleY = null
+  currentParticleEnergy = 0
+  arcs = []
+  vectors = []
+  snow = []
+  maxSnow = 600
+  snowId = 0
+  bufferTime = 0

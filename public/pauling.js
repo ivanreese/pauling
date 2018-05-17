@@ -1,5 +1,5 @@
 (function() {
-  var API, F2, G2, Grad, PI, TAU, absolutePos, arcs, bail, bestSnow, bufferTime, clip, container, currentParticleEnergy, deletePhasor, fadeTime, grad3, gradP, granularlize, hasMoved, height, lastMouseX, lastMouseY, lastParticleX, lastParticleY, lastTime, lerp, makeArc, makeNoisePhasor, maxParticleArcDist, maxParticleRadius, maxParticles, maxSnow, minParticleArcDist, mouseDist, mouseDx, mouseDy, mouseX, mouseY, p, particleID, particleMaxEnergy, particleMinEnergy, particles, perm, phasorComplexityTuning, phasors, rand, render, renderRequested, requestRender, requestResize, resize, running, sampleNoisePhasor, scale, setSeed, setupInput, setupSurface, simplex2, snow, snowId, spawnSnow, surfaces, timeScale, vecSnowDist, vectorSpacing, vectors, width, worldTime, worstSnow;
+  var API, F2, G2, Grad, PI, TAU, absolutePos, arcs, bail, bestSnow, bufferTime, clearContainer, clip, container, currentParticleEnergy, deletePhasor, fadeTime, grad3, gradP, granularlize, hasMoved, height, lastMouseX, lastMouseY, lastParticleX, lastParticleY, lastTime, lerp, makeArc, makeNoisePhasor, maxParticleArcDist, maxParticleRadius, maxParticles, maxSnow, minParticleArcDist, mouseDist, mouseDx, mouseDy, mouseX, mouseY, mousemove, p, particleID, particleMaxEnergy, particleMinEnergy, particles, perm, phasorComplexityTuning, phasors, rand, render, renderRequested, requestRender, requestResize, resetDefaults, resize, running, sampleNoisePhasor, scale, setSeed, setupSurface, simplex2, snow, snowId, spawnSnow, start, stop, surfaces, timeScale, touchmove, vecSnowDist, vectorSpacing, vectors, width, worldTime, worstSnow;
 
   API = null;
 
@@ -102,6 +102,21 @@
 
   bufferTime = 0;
 
+  resetDefaults = function() {
+    phasors = {};
+    particles = [];
+    particleID = 0;
+    lastParticleX = null;
+    lastParticleY = null;
+    currentParticleEnergy = 0;
+    arcs = [];
+    vectors = [];
+    snow = [];
+    maxSnow = 600;
+    snowId = 0;
+    return bufferTime = 0;
+  };
+
   makeArc = function(a, b, dist, energy) {
     return arcs.push({
       a: a,
@@ -165,6 +180,10 @@
     return typeof surface.setup === "function" ? surface.setup(surface) : void 0;
   };
 
+  clearContainer = function() {
+    return container.innerHTML = "";
+  };
+
   resize = function() {
     var name, surface;
     width = container.offsetWidth;
@@ -196,17 +215,16 @@
     }
   };
 
-  setupInput = function() {
-    window.addEventListener("mousemove", function(e) {
-      hasMoved = true;
-      mouseX = e.clientX;
-      return mouseY = e.clientY;
-    });
-    return window.addEventListener("touchmove", function(e) {
-      hasMoved = true;
-      mouseX = e.touches[0].clientX;
-      return mouseY = e.touches[0].clientY;
-    });
+  mousemove = function(e) {
+    hasMoved = true;
+    mouseX = e.clientX;
+    return mouseY = e.clientY;
+  };
+
+  touchmove = function(e) {
+    hasMoved = true;
+    mouseX = e.touches[0].clientX;
+    return mouseY = e.touches[0].clientY;
   };
 
   PI = Math.PI;
@@ -758,35 +776,44 @@
     return surfaces.snowbuffer.canvas.style.opacity = Math.pow(scale(bufferTime, 0, fadeTime, 1, 0, true), .8);
   };
 
-  window.Pauling = function(c) {
+  start = function(c) {
     var name, surface;
-    if (container != null) {
-      return API;
+    if (running) {
+      return;
     }
+    running = true;
     container = c;
     absolutePos(container);
     container.style.backgroundColor = "#222";
+    resetDefaults();
     for (name in surfaces) {
       surface = surfaces[name];
       setupSurface(surface);
     }
-    setupInput();
+    window.addEventListener("mousemove", mousemove);
+    window.addEventListener("touchmove", touchmove);
     window.addEventListener("resize", requestResize);
     resize();
-    return API = {
-      start: function() {
-        if (running) {
-          return;
-        }
-        running = true;
-        render();
-        return void 0;
-      },
-      stop: function() {
-        running = false;
-        return void 0;
-      }
-    };
+    render();
+    return void 0;
+  };
+
+  stop = function() {
+    running = false;
+    clearContainer();
+    window.removeEventListener("mousemove", mousemove);
+    window.removeEventListener("touchmove", touchmove);
+    window.removeEventListener("resize", requestResize);
+    return void 0;
+  };
+
+  API = {
+    start: start,
+    stop: stop
+  };
+
+  window.Pauling = function() {
+    return API;
   };
 
 }).call(this);
