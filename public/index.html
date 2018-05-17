@@ -9,12 +9,8 @@
   <div id="pauling"></div>
 
   <script src="pauling.js"></script>
-  <script>
-    var api = window.Pauling()
-    api.start(document.getElementById("pauling"))
-    // Later...
-    // api.stop()
-  </script>
+  <script>window.Pauling().start(document.getElementById("pauling"))</script>
+
 
   <script>
     window.addEventListener("gesturestart", function(e){e.preventDefault()});

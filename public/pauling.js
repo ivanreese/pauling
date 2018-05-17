@@ -799,6 +799,9 @@
   };
 
   stop = function() {
+    if (!running) {
+      return;
+    }
     running = false;
     clearContainer();
     window.removeEventListener("mousemove", mousemove);

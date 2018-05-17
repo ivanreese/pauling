@@ -22,6 +22,7 @@ start = (c)->
 
 
 stop = ()->
+  return unless running
   running = false
 
   clearContainer()
