@@ -12,7 +12,7 @@ start = (c)->
   setupSurface surface for name, surface of surfaces
 
   window.addEventListener "mousemove", mousemove
-  window.addEventListener "touchmove", touchmove
+  window.addEventListener "touchmove", touchmove, passive: false
   window.addEventListener "resize", requestResize
 
   resize()

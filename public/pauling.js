@@ -222,6 +222,7 @@
   };
 
   touchmove = function(e) {
+    e.preventDefault();
     hasMoved = true;
     mouseX = e.touches[0].clientX;
     return mouseY = e.touches[0].clientY;
@@ -791,7 +792,9 @@
       setupSurface(surface);
     }
     window.addEventListener("mousemove", mousemove);
-    window.addEventListener("touchmove", touchmove);
+    window.addEventListener("touchmove", touchmove, {
+      passive: false
+    });
     window.addEventListener("resize", requestResize);
     resize();
     render();

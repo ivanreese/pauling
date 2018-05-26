@@ -4,6 +4,7 @@ mousemove = (e)->
   mouseY = e.clientY
 
 touchmove = (e)->
+  e.preventDefault()
   hasMoved = true
   mouseX = e.touches[0].clientX
   mouseY = e.touches[0].clientY
